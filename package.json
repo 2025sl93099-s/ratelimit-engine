@@ -44,9 +44,9 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^1.0.0",
+    "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^8.57.0",
-    "vitest": "^1.0.0"
+    "vitest": "^5.1.0"
   },
   "peerDependencies": {
     "ioredis": ">=5.0.0"
