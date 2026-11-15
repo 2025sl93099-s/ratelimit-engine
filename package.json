@@ -35,7 +35,8 @@
     "LICENSE"
   ],
   "bin": {
-    "ratelimit-engine": "./bin/cli.js"
+    "ratelimit-engine": "./bin/cli.js",
+    "ratelimit-dashboard": "./bin/dashboard.js"
   },
   "author": "Abhinav710 <kumarabhinav5693@gmail.com>",
   "license": "MIT",

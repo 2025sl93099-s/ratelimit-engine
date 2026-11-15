@@ -1,13 +1,26 @@
 #!/usr/bin/env node
 /**
  * ratelimit-engine CLI
- * Setup wizard — generates ratelimit.config.js for your project.
- * Usage: npx ratelimit-engine
+ * Usage:
+ *   npx ratelimit-engine             — setup wizard
+ *   npx ratelimit-engine dashboard   — live 10ms dashboard
  */
 
 import * as readline from 'readline'
 import * as fs from 'fs'
 import * as path from 'path'
+import { createRequire } from 'module'
+import { fileURLToPath }  from 'url'
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
+
+// ── Route subcommands ─────────────────────────────────────────────
+const subcommand = process.argv[2]
+if (subcommand === 'dashboard') {
+  // Dynamically import and run the dashboard
+  await import(new URL('./dashboard.js', import.meta.url))
+  process.exit(0)
+}
 
 // ── ANSI colours ──────────────────────────────────────────────────
 const C = {
