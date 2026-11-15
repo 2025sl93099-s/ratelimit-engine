@@ -28,6 +28,12 @@
     "enterprise",
     "middleware"
   ],
+  "files": [
+    "src",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
   "bin": {
     "ratelimit-engine": "./bin/cli.js"
   },

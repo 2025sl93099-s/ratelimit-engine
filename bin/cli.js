@@ -1,20 +1,15 @@
 #!/usr/bin/env node
 /**
  * ratelimit-engine CLI
- * Interactive wizard to simulate any built-in algorithm.
- * Usage: npx ratelimit-engine simulate
+ * Setup wizard — generates ratelimit.config.js for your project.
+ * Usage: npx ratelimit-engine
  */
 
 import * as readline from 'readline'
-import { FixedWindow }   from '../src/algorithms/FixedWindow.js'
-import { SlidingWindow } from '../src/algorithms/SlidingWindow.js'
-import { TokenBucket }   from '../src/algorithms/TokenBucket.js'
-import { LeakyBucket }   from '../src/algorithms/LeakyBucket.js'
-import { Composite }     from '../src/algorithms/Composite.js'
-import { MemoryStore }   from '../src/stores/MemoryStore.js'
-import { COMPOSITE_MODES } from '../src/constants/algorithms.js'
+import * as fs from 'fs'
+import * as path from 'path'
 
-// ── ANSI colours ─────────────────────────────────────────────────
+// ── ANSI colours ──────────────────────────────────────────────────
 const C = {
   reset:   '\x1b[0m',
   bold:    '\x1b[1m',
@@ -24,19 +19,18 @@ const C = {
   yellow:  '\x1b[33m',
   cyan:    '\x1b[36m',
   magenta: '\x1b[35m',
-  white:   '\x1b[37m',
-  bgDark:  '\x1b[48;5;235m',
+  blue:    '\x1b[34m',
 }
 
 const bold    = (s) => `${C.bold}${s}${C.reset}`
 const dim     = (s) => `${C.dim}${s}${C.reset}`
 const green   = (s) => `${C.green}${s}${C.reset}`
-const red     = (s) => `${C.red}${s}${C.reset}`
 const cyan    = (s) => `${C.cyan}${s}${C.reset}`
 const yellow  = (s) => `${C.yellow}${s}${C.reset}`
 const magenta = (s) => `${C.magenta}${s}${C.reset}`
+const blue    = (s) => `${C.blue}${s}${C.reset}`
 
-// ── Readline helper ───────────────────────────────────────────────
+// ── Readline helpers ──────────────────────────────────────────────
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 
 function ask(question) {
@@ -45,219 +39,253 @@ function ask(question) {
   })
 }
 
-function askNumber(question, defaultVal) {
-  return new Promise(async (resolve) => {
-    const raw = await ask(`${question} ${dim(`[${defaultVal}]`)}: `)
-    const num = parseInt(raw, 10)
-    resolve(isNaN(num) || num <= 0 ? defaultVal : num)
-  })
+async function askNumber(label, defaultVal) {
+  const raw = await ask(`  ${label} ${dim(`[${defaultVal}]`)}: `)
+  const num = parseInt(raw, 10)
+  return isNaN(num) || num <= 0 ? defaultVal : num
 }
 
-// ── Algorithm menu ────────────────────────────────────────────────
+async function askChoice(choices) {
+  choices.forEach((c, i) => {
+    console.log(`  ${bold(cyan(String(i + 1)))}. ${bold(c.label.padEnd(18))} ${dim(c.desc)}`)
+  })
+  const raw = await ask(`\n  Pick [1-${choices.length}]: `)
+  const idx = parseInt(raw, 10) - 1
+  if (isNaN(idx) || idx < 0 || idx >= choices.length) return choices[0]
+  return choices[idx]
+}
+
+// ── Algorithm definitions ─────────────────────────────────────────
 const ALGORITHMS = [
-  {
-    key:   'token-bucket',
-    label: 'Token Bucket',
-    desc:  'Burst-friendly — refills tokens over time',
-    color: cyan,
-  },
-  {
-    key:   'fixed-window',
-    label: 'Fixed Window',
-    desc:  'Simple counter per time window',
-    color: green,
-  },
-  {
-    key:   'sliding-window',
-    label: 'Sliding Window',
-    desc:  'Smooth rolling window, no boundary spikes',
-    color: yellow,
-  },
-  {
-    key:   'leaky-bucket',
-    label: 'Leaky Bucket',
-    desc:  'Strict output rate, drops excess',
-    color: magenta,
-  },
-  {
-    key:   'composite',
-    label: 'Composite',
-    desc:  'Combine two algorithms (ALL / ANY)',
-    color: (s) => `\x1b[35m${s}${C.reset}`,
-  },
+  { key: 'TokenBucket',   label: 'Token Bucket',   desc: 'Burst-friendly — refills tokens over time' },
+  { key: 'FixedWindow',   label: 'Fixed Window',   desc: 'Simple counter per time window' },
+  { key: 'SlidingWindow', label: 'Sliding Window', desc: 'Smooth rolling window, no boundary spikes' },
+  { key: 'LeakyBucket',   label: 'Leaky Bucket',   desc: 'Strict output rate, drops excess' },
+  { key: 'Composite',     label: 'Composite',      desc: 'Combine two algorithms (ALL / ANY)' },
 ]
 
-// ── Build algorithm from user input ──────────────────────────────
-async function buildAlgorithm(key) {
+const STORES = [
+  { key: 'MemoryStore', label: 'Memory',  desc: 'In-process store — single instance' },
+  { key: 'RedisStore',  label: 'Redis',   desc: 'Distributed store — multi-instance / clustered' },
+]
+
+const FRAMEWORKS = [
+  { key: 'express',  label: 'Express',  desc: 'app.use(limiter.express())' },
+  { key: 'fastify',  label: 'Fastify',  desc: 'fastify.addHook("onRequest", limiter.fastify())' },
+  { key: 'manual',   label: 'Manual',   desc: 'limiter.check(ctx) — any framework' },
+]
+
+const KEY_STRATEGIES = [
+  { key: 'byIP',               label: 'By IP',         desc: 'One counter per client IP (default)' },
+  { key: 'byUser',             label: 'By User',        desc: 'One counter per authenticated user' },
+  { key: 'byRoute',            label: 'By Route',       desc: 'One counter per URL path' },
+  { key: 'compositeResolver',  label: 'IP + Route',     desc: 'Separate counter per IP+route combination' },
+]
+
+// ── Config collectors ─────────────────────────────────────────────
+async function collectAlgoConfig(key) {
   switch (key) {
-    case 'token-bucket': {
-      const capacity   = await askNumber('  Bucket capacity (max tokens)', 10)
-      const refillRate = await askNumber('  Refill rate (tokens/sec)', 2)
-      return new TokenBucket({ capacity, refillRate })
+    case 'TokenBucket': {
+      const capacity   = await askNumber('Token bucket capacity (burst size)', 100)
+      const refillRate = await askNumber('Refill rate (tokens/sec)', 10)
+      return { capacity, refillRate }
     }
-    case 'fixed-window': {
-      const limit    = await askNumber('  Max requests', 10)
-      const windowMs = (await askNumber('  Window (seconds)', 60)) * 1000
-      return new FixedWindow({ limit, windowMs })
+    case 'FixedWindow':
+    case 'SlidingWindow': {
+      const limit    = await askNumber('Max requests per window', 100)
+      const windowMs = (await askNumber('Window size (seconds)', 60)) * 1000
+      return { limit, windowMs }
     }
-    case 'sliding-window': {
-      const limit    = await askNumber('  Max requests', 10)
-      const windowMs = (await askNumber('  Window (seconds)', 60)) * 1000
-      return new SlidingWindow({ limit, windowMs })
+    case 'LeakyBucket': {
+      const capacity = await askNumber('Queue capacity (max queued requests)', 100)
+      const leakRate = await askNumber('Leak rate (requests/sec)', 10)
+      return { capacity, leakRate }
     }
-    case 'leaky-bucket': {
-      const capacity = await askNumber('  Bucket capacity (queue depth)', 10)
-      const leakRate = await askNumber('  Leak rate (requests/sec)', 2)
-      return new LeakyBucket({ capacity, leakRate })
-    }
-    case 'composite': {
-      console.log(`\n  ${bold('Primary algorithm:')}`)
-      const primaryKey  = await pickAlgorithm(ALGORITHMS.filter((a) => a.key !== 'composite'))
-      const primary     = await buildAlgorithm(primaryKey)
+    case 'Composite': {
+      console.log(`\n  ${bold('Primary algorithm:')}\n`)
+      const primary = await askChoice(ALGORITHMS.filter((a) => a.key !== 'Composite'))
+      const primaryConfig = await collectAlgoConfig(primary.key)
 
-      console.log(`\n  ${bold('Secondary algorithm:')}`)
-      const secondaryKey = await pickAlgorithm(ALGORITHMS.filter((a) => a.key !== 'composite'))
-      const secondary    = await buildAlgorithm(secondaryKey)
+      console.log(`\n  ${bold('Secondary algorithm:')}\n`)
+      const secondary = await askChoice(ALGORITHMS.filter((a) => a.key !== 'Composite'))
+      const secondaryConfig = await collectAlgoConfig(secondary.key)
 
-      const modeRaw = await ask(`\n  Mode — ${cyan('1')} ALL (both must pass) / ${yellow('2')} ANY (one must pass) [1]: `)
-      const mode    = modeRaw === '2' ? COMPOSITE_MODES.ANY : COMPOSITE_MODES.ALL
+      console.log(`\n  ${bold('Composite mode:')}\n`)
+      const mode = await askChoice([
+        { key: 'ALL', label: 'ALL', desc: 'Both algorithms must allow the request' },
+        { key: 'ANY', label: 'ANY', desc: 'At least one algorithm must allow the request' },
+      ])
 
-      return new Composite({ algorithms: [primary, secondary], mode })
+      return { primary: { key: primary.key, config: primaryConfig }, secondary: { key: secondary.key, config: secondaryConfig }, mode: mode.key }
     }
     default:
-      return new FixedWindow()
+      return {}
   }
 }
 
-async function pickAlgorithm(list = ALGORITHMS) {
-  list.forEach((a, i) => {
-    console.log(`  ${bold(cyan(String(i + 1)))}. ${bold(a.label.padEnd(18))} ${dim(a.desc)}`)
+// ── Code generators ───────────────────────────────────────────────
+function algoArgs(key, config) {
+  switch (key) {
+    case 'TokenBucket':
+      return `{ capacity: ${config.capacity}, refillRate: ${config.refillRate} }`
+    case 'FixedWindow':
+    case 'SlidingWindow':
+      return `{ limit: ${config.limit}, windowMs: ${config.windowMs} }`
+    case 'LeakyBucket':
+      return `{ capacity: ${config.capacity}, leakRate: ${config.leakRate} }`
+    default:
+      return '{}'
+  }
+}
+
+function generateConfig({ algoKey, algoConfig, storeKey, frameworkKey, keyStrategyKey }) {
+  const isRedis     = storeKey === 'RedisStore'
+  const isComposite = algoKey === 'Composite'
+
+  const imports = isComposite
+    ? [algoKey, algoConfig.primary.key, algoConfig.secondary.key]
+    : [algoKey]
+
+  const allImports = [...new Set([...imports, storeKey, keyStrategyKey])]
+
+  const redisImport  = isRedis ? `\nimport Redis from 'ioredis'` : ''
+  const redisClient  = isRedis ? `\nconst redis = new Redis() // configure your Redis connection\n` : ''
+  const storeInit    = isRedis
+    ? `new RedisStore({ client: redis })`
+    : `new MemoryStore()`
+
+  let algoInit
+  if (isComposite) {
+    const { primary, secondary, mode } = algoConfig
+    algoInit = `new Composite({
+  algorithms: [
+    new ${primary.key}(${algoArgs(primary.key, primary.config)}),
+    new ${secondary.key}(${algoArgs(secondary.key, secondary.config)}),
+  ],
+  mode: COMPOSITE_MODES.${mode},
+})`
+  } else {
+    algoInit = `new ${algoKey}(${algoArgs(algoKey, algoConfig)})`
+  }
+
+  const compositeImport = isComposite ? `, COMPOSITE_MODES` : ''
+
+  let frameworkUsage
+  switch (frameworkKey) {
+    case 'express':
+      frameworkUsage = `// Express — apply globally
+app.use(limiter.express())
+
+// or per-route
+app.get('/api/resource', limiter.express(), handler)`
+      break
+    case 'fastify':
+      frameworkUsage = `// Fastify — apply globally
+fastify.addHook('onRequest', limiter.fastify())
+
+// or per-route
+fastify.get('/api/resource', { onRequest: limiter.fastify() }, handler)`
+      break
+    case 'manual':
+      frameworkUsage = `// Manual — any framework
+const result = await limiter.check({
+  ip:   req.ip,
+  path: req.path,
+  user: req.user?.id, // optional
+})
+
+if (!result.allowed) {
+  return res.status(429).json({
+    error:      'Too Many Requests',
+    retryAfter: result.retryAfter,
   })
-
-  const raw = await ask(`\n  Pick [1-${list.length}]: `)
-  const idx = parseInt(raw, 10) - 1
-
-  if (isNaN(idx) || idx < 0 || idx >= list.length) {
-    console.log(dim('  Invalid choice — defaulting to Token Bucket'))
-    return 'token-bucket'
+}`
+      break
   }
 
-  return list[idx].key
-}
+  return `import { ${allImports.join(', ')}${compositeImport} } from 'ratelimit-engine'${redisImport}
+${redisClient}
+const limiter = createLimiter({
+  algorithm: ${algoInit},
+  store:     ${storeInit},
+  keyBy:     ${keyStrategyKey},
+  failOpen:  true,
+  onBlocked: (ctx, result) => {
+    console.warn(\`[RATE LIMIT] \${ctx.ip} blocked — retry in \${result.retryAfter}s\`)
+  },
+})
 
-// ── Table renderer ────────────────────────────────────────────────
-function renderTable(rows) {
-  const cols = [
-    { key: 'req',        label: 'Req',        width: 5  },
-    { key: 'time',       label: 'Time (ms)',  width: 10 },
-    { key: 'allowed',    label: 'Allowed',    width: 10 },
-    { key: 'remaining',  label: 'Remaining',  width: 11 },
-    { key: 'retryAfter', label: 'Retry (s)',  width: 10 },
-    { key: 'resetAt',    label: 'Resets At',  width: 12 },
-  ]
+${frameworkUsage}
 
-  const divider = '+' + cols.map((c) => '-'.repeat(c.width + 2)).join('+') + '+'
-  const header  = '|' + cols.map((c) => ` ${bold(c.label.padEnd(c.width))} `).join('|') + '|'
-
-  console.log('\n' + divider)
-  console.log(header)
-  console.log(divider)
-
-  for (const row of rows) {
-    const allowed = row.allowed
-      ? green('✅ yes'.padEnd(10))
-      : red('❌ no'.padEnd(10))
-
-    const line = '|' + [
-      ` ${String(row.req).padEnd(cols[0].width)} `,
-      ` ${String(row.time).padEnd(cols[1].width)} `,
-      ` ${allowed} `,
-      ` ${String(row.remaining).padEnd(cols[3].width)} `,
-      ` ${String(row.retryAfter ?? '—').padEnd(cols[4].width)} `,
-      ` ${String(row.resetAt).padEnd(cols[5].width)} `,
-    ].join('|') + '|'
-
-    console.log(line)
-  }
-
-  console.log(divider)
-}
-
-// ── Summary ───────────────────────────────────────────────────────
-function renderSummary(rows) {
-  const allowed   = rows.filter((r) => r.allowed).length
-  const blocked   = rows.filter((r) => !r.allowed).length
-  const avgRemain = (rows.reduce((s, r) => s + r.remaining, 0) / rows.length).toFixed(1)
-
-  console.log(`
-  ${bold('Summary')}
-  ───────────────────────────────
-  Total requests : ${bold(String(rows.length))}
-  Allowed        : ${green(bold(String(allowed)))}
-  Blocked        : ${red(bold(String(blocked)))}
-  Avg remaining  : ${cyan(avgRemain)}
-  `)
-}
-
-// ── Sleep helper ──────────────────────────────────────────────────
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+export { limiter }
+`
 }
 
 // ── Main ──────────────────────────────────────────────────────────
 async function main() {
   console.clear()
   console.log(`
-  ${bold(cyan('⚡ ratelimit-engine'))} ${dim('— Algorithm Simulator')}
-  ${dim('─────────────────────────────────────────')}
+  ${bold(cyan('⚡ ratelimit-engine'))} ${dim('— Setup Wizard')}
+  ${dim('─────────────────────────────────────────────')}
+  ${dim('Generates a ready-to-use ratelimit.config.js')}
+  ${dim('for your project in the current directory.')}
   `)
 
-  console.log(`  ${bold('Select algorithm:')}\n`)
-  const algoKey  = await pickAlgorithm()
-  const algo     = await buildAlgorithm(algoKey)
-  const requests = await askNumber('\nSimulate how many requests?', 15)
-  const delayMs  = await askNumber('Delay between requests (ms)?', 100)
+  // Step 1 — Algorithm
+  console.log(`  ${bold('Step 1 — Choose an algorithm:')}\n`)
+  const algo = await askChoice(ALGORITHMS)
+  console.log()
+  const algoConfig = await collectAlgoConfig(algo.key)
 
-  console.log(`\n  ${dim('Running simulation...')}\n`)
-
-  const store = new MemoryStore()
-  const rows  = []
-  const key   = 'cli:simulate'
-  const start = Date.now()
-
-  for (let i = 1; i <= requests; i++) {
-    const result = await algo.check(key, store)
-    const elapsed = Date.now() - start
-
-    rows.push({
-      req:        i,
-      time:       elapsed,
-      allowed:    result.allowed,
-      remaining:  result.remaining,
-      retryAfter: result.retryAfter !== undefined ? result.retryAfter : '—',
-      resetAt:    result.resetAt.toTimeString().slice(0, 8),
-    })
-
-    if (i < requests) {
-      await sleep(delayMs)
-    }
+  // Step 2 — Store
+  console.log(`\n  ${bold('Step 2 — Choose a store:')}\n`)
+  const store = await askChoice(STORES)
+  if (store.key === 'RedisStore') {
+    console.log(`\n  ${yellow('Note:')} Make sure ${bold('ioredis')} is installed: ${dim('npm install ioredis')}`)
   }
 
-  await store.destroy()
-  renderTable(rows)
-  renderSummary(rows)
+  // Step 3 — Framework
+  console.log(`\n  ${bold('Step 3 — Choose your framework:')}\n`)
+  const framework = await askChoice(FRAMEWORKS)
 
-  const again = await ask('  Run another simulation? (y/n) [n]: ')
-  if (again.toLowerCase() === 'y') {
-    await main()
-  } else {
-    console.log(`\n  ${dim('Goodbye.')}\n`)
-    rl.close()
+  // Step 4 — Key strategy
+  console.log(`\n  ${bold('Step 4 — How should requests be keyed?')}\n`)
+  const keyStrategy = await askChoice(KEY_STRATEGIES)
+
+  // Generate
+  const code = generateConfig({
+    algoKey:        algo.key,
+    algoConfig,
+    storeKey:       store.key,
+    frameworkKey:   framework.key,
+    keyStrategyKey: keyStrategy.key,
+  })
+
+  // Write file
+  const outPath = path.join(process.cwd(), 'ratelimit.config.js')
+  fs.writeFileSync(outPath, code, 'utf8')
+
+  // Output
+  console.log(`\n  ${dim('─────────────────────────────────────────────')}`)
+  console.log(`  ${green(bold('✅ Done!'))} Generated ${bold('ratelimit.config.js')}\n`)
+  console.log(`  ${dim('─────────────────────────────────────────────')}`)
+  console.log(`\n${code}`)
+  console.log(`  ${dim('─────────────────────────────────────────────')}`)
+  console.log(`\n  ${bold('Next steps:')}\n`)
+  console.log(`  ${cyan('1.')} Import the config into your app:`)
+  console.log(`     ${dim("import { limiter } from './ratelimit.config.js'")}`)
+  console.log(`\n  ${cyan('2.')} Wire it up — the usage snippet is inside the generated file.`)
+  if (store.key === 'RedisStore') {
+    console.log(`\n  ${cyan('3.')} Install ioredis if not already:`)
+    console.log(`     ${dim('npm install ioredis')}`)
   }
+  console.log()
+
+  rl.close()
 }
 
 main().catch((err) => {
-  console.error(red(`\nError: ${err.message}`))
+  console.error(`\nError: ${err.message}`)
   rl.close()
   process.exit(1)
 })
