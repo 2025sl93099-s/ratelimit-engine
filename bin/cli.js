@@ -138,7 +138,7 @@ function algoArgs(key, config) {
   }
 }
 
-function generateConfig({ algoKey, algoConfig, storeKey, frameworkKey, keyStrategyKey }) {
+function generateConfig({ algoKey, algoConfig, storeKey, frameworkKey, keyStrategyKey, failOpen = true, customOnBlocked = null }) {
   const isRedis     = storeKey === 'RedisStore'
   const isComposite = algoKey === 'Composite'
 
@@ -146,7 +146,7 @@ function generateConfig({ algoKey, algoConfig, storeKey, frameworkKey, keyStrate
     ? [algoKey, algoConfig.primary.key, algoConfig.secondary.key]
     : [algoKey]
 
-  const allImports = [...new Set([...imports, storeKey, keyStrategyKey])]
+  const allImports = [...new Set(['createLimiter', ...imports, storeKey, keyStrategyKey])]
 
   const redisImport  = isRedis ? `\nimport Redis from 'ioredis'` : ''
   const redisClient  = isRedis ? `\nconst redis = new Redis() // configure your Redis connection\n` : ''
@@ -203,15 +203,19 @@ if (!result.allowed) {
       break
   }
 
+  const onBlockedMsg = customOnBlocked
+    ? `console.warn(\`${customOnBlocked}\`)`
+    : `console.warn(\`[RATE LIMIT] \${ctx.ip} blocked — retry in \${result.retryAfter}s\`)`
+
   return `import { ${allImports.join(', ')}${compositeImport} } from 'ratelimit-engine'${redisImport}
 ${redisClient}
 const limiter = createLimiter({
   algorithm: ${algoInit},
   store:     ${storeInit},
   keyBy:     ${keyStrategyKey},
-  failOpen:  true,
+  failOpen:  ${failOpen},
   onBlocked: (ctx, result) => {
-    console.warn(\`[RATE LIMIT] \${ctx.ip} blocked — retry in \${result.retryAfter}s\`)
+    ${onBlockedMsg}
   },
 })
 
@@ -252,6 +256,17 @@ async function main() {
   console.log(`\n  ${bold('Step 4 — How should requests be keyed?')}\n`)
   const keyStrategy = await askChoice(KEY_STRATEGIES)
 
+  // Step 5 — Custom overrides
+  console.log(`\n  ${bold('Step 5 — Custom options')} ${dim('(press Enter to skip each)')}`)
+  console.log(`  ${dim('Override any value before the file is written.\n')}`)
+
+  const outputFile = await ask(`  Output filename ${dim('[ratelimit.config.js]')}: `)
+  const fileName   = outputFile || 'ratelimit.config.js'
+
+  const customOnBlocked = await ask(`  onBlocked message ${dim('[Rate limit exceeded, retry in {n}s]')}: `)
+  const failOpenRaw     = await ask(`  failOpen — allow requests when store is down? ${dim('[yes]')}: `)
+  const failOpen        = failOpenRaw.toLowerCase() === 'no' ? false : true
+
   // Generate
   const code = generateConfig({
     algoKey:        algo.key,
@@ -259,21 +274,23 @@ async function main() {
     storeKey:       store.key,
     frameworkKey:   framework.key,
     keyStrategyKey: keyStrategy.key,
+    failOpen,
+    customOnBlocked: customOnBlocked || null,
   })
 
   // Write file
-  const outPath = path.join(process.cwd(), 'ratelimit.config.js')
+  const outPath = path.join(process.cwd(), fileName)
   fs.writeFileSync(outPath, code, 'utf8')
 
   // Output
   console.log(`\n  ${dim('─────────────────────────────────────────────')}`)
-  console.log(`  ${green(bold('✅ Done!'))} Generated ${bold('ratelimit.config.js')}\n`)
+  console.log(`  ${green(bold('✅ Done!'))} Generated ${bold(fileName)}\n`)
   console.log(`  ${dim('─────────────────────────────────────────────')}`)
   console.log(`\n${code}`)
   console.log(`  ${dim('─────────────────────────────────────────────')}`)
   console.log(`\n  ${bold('Next steps:')}\n`)
   console.log(`  ${cyan('1.')} Import the config into your app:`)
-  console.log(`     ${dim("import { limiter } from './ratelimit.config.js'")}`)
+  console.log(`     ${dim(`import { limiter } from './${fileName}'`)}`)
   console.log(`\n  ${cyan('2.')} Wire it up — the usage snippet is inside the generated file.`)
   if (store.key === 'RedisStore') {
     console.log(`\n  ${cyan('3.')} Install ioredis if not already:`)
