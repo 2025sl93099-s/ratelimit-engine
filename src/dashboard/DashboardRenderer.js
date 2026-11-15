@@ -5,8 +5,7 @@
  */
 
 // ── ANSI helpers ──────────────────────────────────────────────────
-const ESC   = '\x1b['
-const CLEAR = '\x1b[2J\x1b[H'   // clear screen + move cursor to top
+const CLEAR = '\x1b[H\x1b[2J\x1b[3J'
 const HIDE  = '\x1b[?25l'       // hide cursor
 const SHOW  = '\x1b[?25h'       // show cursor
 
@@ -31,7 +30,6 @@ const green   = (s) => `${C.green}${s}${C.reset}`
 const red     = (s) => `${C.red}${s}${C.reset}`
 const yellow  = (s) => `${C.yellow}${s}${C.reset}`
 const cyan    = (s) => `${C.cyan}${s}${C.reset}`
-const magenta = (s) => `${C.magenta}${s}${C.reset}`
 
 // ── Sparkline ─────────────────────────────────────────────────────
 const SPARK_CHARS = ' ▁▂▃▄▅▆▇█'

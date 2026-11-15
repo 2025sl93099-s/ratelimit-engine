@@ -6,7 +6,6 @@
 
 import { EventEmitter } from 'events'
 
-const BUCKET_MS   = 10   // resolution: one bucket per 10ms
 const HISTORY     = 200  // keep last 200 buckets (2 seconds of sparkline)
 const TOP_IPS     = 8    // max IPs shown in top-IPs panel
 const FEED_SIZE   = 12   // max rows in live feed
@@ -40,7 +39,9 @@ export class DashboardCollector extends EventEmitter {
   /** Flush current bucket and start a new one — called every 10ms */
   flush() {
     this._buckets.push(this._current)
-    if (this._buckets.length > HISTORY) this._buckets.shift()
+    if (this._buckets.length > HISTORY) {
+      this._buckets.shift()
+    }
     this._current = this._newBucket()
   }
 
@@ -84,14 +85,19 @@ export class DashboardCollector extends EventEmitter {
   _trackIP(context, allowed) {
     const ip = context?.ip ?? 'unknown'
     const entry = this._ipMap.get(ip) ?? { allowed: 0, blocked: 0, lastSeen: 0 }
-    if (allowed) entry.allowed++
-    else entry.blocked++
+    if (allowed) {
+      entry.allowed++
+    } else {
+      entry.blocked++
+    }
     entry.lastSeen = Date.now()
     this._ipMap.set(ip, entry)
   }
 
   _pushFeed(event) {
     this._feed.unshift(event)
-    if (this._feed.length > FEED_SIZE) this._feed.pop()
+    if (this._feed.length > FEED_SIZE) {
+      this._feed.pop()
+    }
   }
 }
