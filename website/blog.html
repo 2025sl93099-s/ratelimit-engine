@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Learn rate limiting from scratch — algorithms explained simply, real code examples, and how to protect your Node.js API." />
+  <meta name="description" content="Rate limiting explained with memes — because nobody learns from boring docs." />
   <title>Blog — ratelimit-engine</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="blog.css" />
@@ -11,245 +11,495 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
-<body>
+<body class="motion-ready">
 
   <!-- ── NAV ───────────────────────────────────────────────────────── -->
-  <nav class="nav">
+  <nav class="nav" id="nav">
     <div class="nav__inner">
       <a href="index.html" class="nav__logo">
         <span class="nav__logo-icon">⚡</span>
         ratelimit-engine
       </a>
-      <ul class="nav__links">
-        <li><a href="index.html#features">Features</a></li>
-        <li><a href="index.html#algorithms">Algorithms</a></li>
-        <li><a href="index.html#usage">Usage</a></li>
-        <li><a href="blog.html" class="nav__link--blog">Blog</a></li>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="index.html#features" class="nav__item">Features</a></li>
+        <li><a href="index.html#algorithms" class="nav__item">Algorithms</a></li>
+        <li><a href="index.html#usage" class="nav__item">Usage</a></li>
+        <li><a href="blog.html" class="nav__item nav__item--blog">Blog</a></li>
         <li>
-          <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank" class="nav__link--github">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank" class="nav__item nav__item--github">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
             GitHub
           </a>
         </li>
       </ul>
+      <button class="nav__burger" id="navBurger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
   <!-- ── HERO ──────────────────────────────────────────────────────── -->
   <section class="blog-hero">
+    <div class="blog-hero__glow" aria-hidden="true"></div>
     <div class="blog-hero__inner">
-      <div class="hero__badge">Engineering Blog</div>
-      <h1 class="blog-hero__title">Rate limiting, explained simply</h1>
-      <p class="blog-hero__sub">
-        No jargon. No hand-waving. Real explanations for developers who want to understand
-        what rate limiting actually does — and how to add it to their own projects.
+      <div class="blog-hero__eyebrow reveal reveal--fade">Engineering Blog · Meme Edition</div>
+      <h1 class="blog-hero__title reveal reveal--up" style="--delay:80ms">
+        Rate limiting, explained<br>
+        <span class="blog-hero__title--accent">with memes</span>
+      </h1>
+      <p class="blog-hero__sub reveal reveal--up" style="--delay:180ms">
+        Because nobody learned anything from a dry RFC.<br>
+        Real concepts, zero jargon, maximum cringe.
       </p>
-      <div class="blog-hero__stats">
+      <div class="blog-hero__stats reveal reveal--up" style="--delay:280ms">
         <div class="blog-stat"><span class="blog-stat__num">5</span><span class="blog-stat__label">Algorithms covered</span></div>
         <div class="blog-stat__divider"></div>
-        <div class="blog-stat"><span class="blog-stat__num">3</span><span class="blog-stat__label">Beginner guides</span></div>
+        <div class="blog-stat"><span class="blog-stat__num">∞</span><span class="blog-stat__label">Memes deployed</span></div>
         <div class="blog-stat__divider"></div>
-        <div class="blog-stat"><span class="blog-stat__num">100%</span><span class="blog-stat__label">Free & open source</span></div>
+        <div class="blog-stat"><span class="blog-stat__num">0</span><span class="blog-stat__label">Boring diagrams</span></div>
       </div>
     </div>
   </section>
 
-  <!-- ── WHAT IS RATE LIMITING — BEGINNER EXPLAINER ────────────────── -->
   <section class="section">
     <div class="container">
 
-      <div class="explainer-card">
-        <div class="explainer-card__badge">Start here · 2 min read</div>
-        <h2 class="explainer-card__title">What is rate limiting? (And why should you care?)</h2>
-        <p class="explainer-card__lead">
-          Imagine you run a coffee shop. If 500 people walk in at the same time, your baristas can't keep up —
-          orders pile up, quality drops, and eventually the whole shop grinds to a halt.
-          <strong>Rate limiting is the bouncer at the door.</strong> It controls how many people can come in per minute.
-        </p>
+      <!-- ══════════════════════════════════════════════════════════════
+           MEME 1 — IS THIS A RATE LIMIT?
+      ═══════════════════════════════════════════════════════════════ -->
+      <div class="meme-section reveal reveal--up">
+        <div class="meme-eyebrow">Part 1 · The problem</div>
+        <h2 class="meme-section__title">Your API without rate limiting</h2>
 
-        <div class="explainer-cols">
-          <div class="explainer-col">
-            <div class="explainer-col__icon">😰</div>
-            <h4>Without rate limiting</h4>
-            <ul class="explainer-list">
-              <li>A single user can make 10,000 requests/sec</li>
-              <li>Your server crashes under the load</li>
-              <li>Real users get errors or slow responses</li>
-              <li>A bot can brute-force your login endpoint</li>
-              <li>Your cloud bill spikes unexpectedly</li>
-            </ul>
+        <div class="meme-card meme-card--butterfly">
+          <div class="meme-card__panel">
+            <div class="meme-character meme-character--butterfly">
+              <div class="meme-char__body">🦋</div>
+              <div class="meme-char__label">Your server</div>
+            </div>
+            <div class="meme-butterfly__text">
+              <div class="meme-bubble meme-bubble--top">
+                <div class="meme-bubble__text">Is this… a 429?</div>
+              </div>
+              <div class="meme-butterfly__reqs">
+                <span class="meme-req meme-req--1">req</span>
+                <span class="meme-req meme-req--2">req</span>
+                <span class="meme-req meme-req--3">req</span>
+                <span class="meme-req meme-req--4">req</span>
+                <span class="meme-req meme-req--5">req</span>
+                <span class="meme-req meme-req--6">req</span>
+                <span class="meme-req meme-req--7">req</span>
+                <span class="meme-req meme-req--8">req</span>
+              </div>
+            </div>
           </div>
-          <div class="explainer-col explainer-col--good">
-            <div class="explainer-col__icon">😌</div>
-            <h4>With rate limiting</h4>
-            <ul class="explainer-list">
-              <li>Each user gets a fair share of requests</li>
-              <li>Abuse is blocked automatically with 429</li>
-              <li>Real users always get fast responses</li>
-              <li>Login brute-force is stopped cold</li>
-              <li>Predictable, stable infrastructure costs</li>
-            </ul>
+          <div class="meme-card__caption">
+            <strong>Actual bots:</strong> 50,000 requests/sec<br>
+            <strong>Your server:</strong> sends them all 200 OK and cries quietly
           </div>
         </div>
 
-        <div class="explainer-code-block">
-          <div class="code-label">What a blocked request looks like</div>
-          <pre><code>HTTP/1.1 429 Too Many Requests
+        <div class="explainer-card reveal reveal--up" style="--delay:60ms">
+          <div class="explainer-card__badge">Start here · 2 min read</div>
+          <h2 class="explainer-card__title">What is rate limiting? (And why should you care?)</h2>
+          <p class="explainer-card__lead">
+            Imagine you run a coffee shop. If 500 people walk in at the same time, your baristas can't keep up —
+            orders pile up, quality drops, and eventually the whole shop grinds to a halt.
+            <strong>Rate limiting is the bouncer at the door.</strong> It controls how many people can come in per minute.
+          </p>
+
+          <div class="explainer-cols">
+            <div class="explainer-col">
+              <div class="explainer-col__icon">😰</div>
+              <h4>Without rate limiting</h4>
+              <ul class="explainer-list">
+                <li>A single user can make 10,000 requests/sec</li>
+                <li>Your server crashes under the load</li>
+                <li>Real users get errors or slow responses</li>
+                <li>A bot can brute-force your login endpoint</li>
+                <li>Your cloud bill spikes unexpectedly</li>
+              </ul>
+            </div>
+            <div class="explainer-col explainer-col--good">
+              <div class="explainer-col__icon">😌</div>
+              <h4>With rate limiting</h4>
+              <ul class="explainer-list">
+                <li>Each user gets a fair share of requests</li>
+                <li>Abuse is blocked automatically with 429</li>
+                <li>Real users always get fast responses</li>
+                <li>Login brute-force is stopped cold</li>
+                <li>Predictable, stable infrastructure costs</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="explainer-code-block">
+            <div class="code-label">What a blocked request looks like</div>
+            <pre><code>HTTP/1.1 429 Too Many Requests
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 0
-X-RateLimit-Reset: 1700000060
 Retry-After: 30
 
-{
-  "error": "Too Many Requests",
-  "message": "You've hit the rate limit. Try again in 30 seconds."
-}</code></pre>
+{ "error": "Too Many Requests", "message": "Try again in 30s." }</code></pre>
+          </div>
         </div>
       </div>
 
-      <!-- ── FEATURED POST — TOKEN BUCKET ─────────────────────────── -->
-      <div class="post-featured">
-        <div class="post-featured__meta">
-          <span class="post-tag post-tag--engineering">Deep Dive</span>
-          <span class="post-tag post-tag--beginner">Beginner Friendly</span>
-          <span class="post-date">Nov 2026 · 8 min read</span>
-        </div>
-        <h2 class="post-featured__title">
-          Token Bucket vs Sliding Window — which one should you use?
-        </h2>
-        <p class="post-featured__excerpt">
-          This is the most common question developers ask when adding rate limiting.
-          Here's the honest answer — it depends on your traffic pattern. Let's break each one down with simple analogies.
-        </p>
+      <!-- ══════════════════════════════════════════════════════════════
+           MEME 2 — DISTRACTED BOYFRIEND (algorithms)
+      ═══════════════════════════════════════════════════════════════ -->
+      <div class="meme-section reveal reveal--up">
+        <div class="meme-eyebrow">Part 2 · Choosing an algorithm</div>
+        <h2 class="meme-section__title">Every developer picking their rate limit algorithm</h2>
 
-        <div class="algo-compare">
+        <div class="meme-card meme-card--distracted">
+          <div class="meme-distracted__scene">
+            <div class="meme-distracted__person meme-distracted__person--walker">
+              <div class="meme-person__emoji">🚶</div>
+              <div class="meme-person__label">You</div>
+            </div>
+            <div class="meme-distracted__arrow meme-distracted__arrow--look">👀</div>
+            <div class="meme-distracted__person meme-distracted__person--shiny">
+              <div class="meme-person__emoji">🪣</div>
+              <div class="meme-person__label">Token Bucket<br><small>"allows bursts"</small></div>
+            </div>
+            <div class="meme-distracted__person meme-distracted__person--ignored">
+              <div class="meme-person__emoji">📅</div>
+              <div class="meme-person__label">Fixed Window<br><small>"already works fine"</small></div>
+            </div>
+          </div>
+          <div class="meme-card__caption">
+            Token Bucket: "I allow short bursts while enforcing a long-term average rate 😏"<br>
+            Fixed Window: "I'm literally 3 lines of code and handle 99% of use cases 😢"
+          </div>
+        </div>
+
+        <!-- algo compare grid -->
+        <div class="algo-compare reveal reveal--up" style="--delay:80ms">
           <div class="algo-compare__item">
-            <div class="algo-compare__icon" style="background: rgba(124,106,247,0.15); color: #7c6af7;">🪣</div>
+            <div class="algo-compare__icon" style="background:rgba(124,106,247,.15);color:#7c6af7">🪣</div>
             <div>
               <h4>Token Bucket</h4>
-              <p>Think of it like a water bucket. Tokens drip in at a fixed rate. Each request uses one token. You can save up tokens and <strong>burst</strong> when needed — great for APIs where users occasionally make many requests at once.</p>
-              <div class="algo-use-case">
-                <span class="use-case-label">Best for:</span> Public APIs, mobile apps, anything with natural burst traffic
-              </div>
+              <p>Like a water bucket. Tokens drip in at a fixed rate. You can save them up and <strong>burst</strong> when you need to. Great for mobile apps that go quiet then suddenly active.</p>
+              <div class="algo-use-case"><span class="use-case-label">Best for:</span> Public APIs, mobile apps, SDKs</div>
             </div>
           </div>
           <div class="algo-compare__item">
-            <div class="algo-compare__icon" style="background: rgba(74,222,128,0.15); color: #4ade80;">🪟</div>
+            <div class="algo-compare__icon" style="background:rgba(74,222,128,.15);color:#4ade80">🪟</div>
             <div>
               <h4>Sliding Window</h4>
-              <p>A rolling 60-second window that always looks back. No burst allowed. Every request is counted evenly across time — <strong>no boundary spike</strong> like Fixed Window has. Smoother, fairer limiting.</p>
-              <div class="algo-use-case">
-                <span class="use-case-label">Best for:</span> Search APIs, feeds, anything that should feel smooth and consistent
-              </div>
+              <p>Always looks back 60 seconds. No boundary spikes, no burst. Every request counted evenly across time — <strong>smooth and fair</strong>.</p>
+              <div class="algo-use-case"><span class="use-case-label">Best for:</span> Search, feeds, anything needing fairness</div>
             </div>
           </div>
           <div class="algo-compare__item">
-            <div class="algo-compare__icon" style="background: rgba(251,191,36,0.15); color: #fbbf24;">📅</div>
+            <div class="algo-compare__icon" style="background:rgba(251,191,36,.15);color:#fbbf24">📅</div>
             <div>
               <h4>Fixed Window</h4>
-              <p>Counts requests in hard time slots — e.g. exactly 100 per minute. Simple and cheap, but has a known weakness: a user can make 100 requests at 11:59 and 100 more at 12:00, getting 200 requests in 2 seconds.</p>
-              <div class="algo-use-case">
-                <span class="use-case-label">Best for:</span> Login attempts, low-traffic admin routes, anywhere simplicity wins
-              </div>
+              <p>Counts in hard time slots. Simple. Cheap. Has a known weakness: 100 requests at 11:59 + 100 at 12:00 = 200 in 2 seconds.</p>
+              <div class="algo-use-case"><span class="use-case-label">Best for:</span> Login throttle, admin routes, dev environments</div>
             </div>
           </div>
           <div class="algo-compare__item">
-            <div class="algo-compare__icon" style="background: rgba(251,113,133,0.15); color: #fb7185;">💧</div>
+            <div class="algo-compare__icon" style="background:rgba(251,113,133,.15);color:#fb7185">💧</div>
             <div>
               <h4>Leaky Bucket</h4>
-              <p>Like a bucket with a hole in it — requests drip out at a fixed rate no matter how fast they come in. Excess is dropped. This gives you the most <strong>predictable output rate</strong>.</p>
-              <div class="algo-use-case">
-                <span class="use-case-label">Best for:</span> Protecting downstream services, databases, third-party APIs with strict rate limits
+              <p>Requests drip out at a fixed rate no matter how fast they come in. Excess is dropped immediately. Maximum <strong>predictable output</strong>.</p>
+              <div class="algo-use-case"><span class="use-case-label">Best for:</span> Protecting databases, downstream APIs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════════
+           MEME 3 — THIS IS FINE (no rate limiting on login)
+      ═══════════════════════════════════════════════════════════════ -->
+      <div class="meme-section reveal reveal--up">
+        <div class="meme-eyebrow">Part 3 · The "this is fine" moment</div>
+        <h2 class="meme-section__title">Shipping login without rate limiting</h2>
+
+        <div class="meme-card meme-card--fire">
+          <div class="meme-fire__scene">
+            <div class="meme-fire__room">
+              <div class="meme-fire__flame meme-fire__flame--1">🔥</div>
+              <div class="meme-fire__flame meme-fire__flame--2">🔥</div>
+              <div class="meme-fire__flame meme-fire__flame--3">🔥</div>
+              <div class="meme-fire__flame meme-fire__flame--4">🔥</div>
+              <div class="meme-fire__dog">
+                <div class="meme-fire__dog-emoji">🐶</div>
+                <div class="meme-fire__dog-label">This is fine</div>
+              </div>
+              <div class="meme-fire__table">
+                <div class="meme-fire__cup">☕</div>
+              </div>
+              <div class="meme-fire__sign">
+                <code>POST /login<br>×10,000/sec</code>
+              </div>
+            </div>
+          </div>
+          <div class="meme-card__caption">
+            Your login endpoint getting brute-forced at 10,000 requests/second.<br>
+            You: "It's fine, we have bcrypt." &nbsp;·&nbsp; Attacker: "I have time."
+          </div>
+        </div>
+
+        <!-- fix: quick start guide -->
+        <div class="guide-card reveal reveal--up" style="--delay:60ms">
+          <div class="guide-card__header">
+            <span class="post-tag post-tag--guide">Quick Fix · 3 min</span>
+            <span class="post-date">Stop the fire</span>
+          </div>
+          <h2 class="guide-card__title">Add rate limiting to your Express app in 5 minutes</h2>
+          <p class="guide-card__sub">Four commands. No config files. No jargon. The fire stops.</p>
+
+          <div class="guide-steps">
+            <div class="guide-step">
+              <div class="guide-step__num">1</div>
+              <div class="guide-step__body">
+                <h4>Install</h4>
+                <pre><code>npm install ratelimit-engine</code></pre>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step__num">2</div>
+              <div class="guide-step__body">
+                <h4>Run the wizard — it writes the config for you</h4>
+                <pre><code>npx ratelimit-engine</code></pre>
+                <p class="guide-step__note">5 questions → generates <code>ratelimit.config.js</code> in your project. No manual config.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step__num">3</div>
+              <div class="guide-step__body">
+                <h4>Wire it in</h4>
+                <pre><code>import { limiter } from './ratelimit.config.js'
+import express from 'express'
+const app = express()
+
+app.post('/login', limiter.express(), (req, res) => {
+  res.json({ message: 'Logged in!' })
+})</code></pre>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="guide-step__num">4</div>
+              <div class="guide-step__body">
+                <h4>Watch it work in real time</h4>
+                <pre><code>npx ratelimit-engine dashboard</code></pre>
+                <p class="guide-step__note">10ms live terminal dashboard. See every blocked request as it happens.</p>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="post-featured__footer">
-          <div class="post-author">
-            <div class="post-author__avatar">A</div>
-            <div>
-              <div class="post-author__name">Abhinav Kumar</div>
-              <div class="post-author__handle">@Abhinav710</div>
+      <!-- ══════════════════════════════════════════════════════════════
+           MEME 4 — TWO BUTTONS (Fixed Window boundary problem)
+      ═══════════════════════════════════════════════════════════════ -->
+      <div class="meme-section reveal reveal--up">
+        <div class="meme-eyebrow">Part 4 · The Fixed Window trap</div>
+        <h2 class="meme-section__title">The Fixed Window boundary problem, visualised</h2>
+
+        <div class="meme-card meme-card--twobuttons">
+          <div class="meme-buttons__scene">
+            <div class="meme-buttons__person">
+              <div class="meme-buttons__emoji">😰</div>
+              <div class="meme-buttons__label">Your rate limiter</div>
+            </div>
+            <div class="meme-buttons__group">
+              <button class="meme-btn meme-btn--red" data-meme-btn="allow">
+                Allow 100 more<br><small>(window just reset)</small>
+              </button>
+              <button class="meme-btn meme-btn--red" data-meme-btn="allow2">
+                Allow 100 more<br><small>(previous window)</small>
+              </button>
+            </div>
+          </div>
+          <div class="meme-card__caption meme-card__caption--code">
+            <div class="meme-timeline">
+              <div class="meme-timeline__row">
+                <span class="meme-timeline__time">11:59:50</span>
+                <span class="meme-timeline__event meme-timeline__event--bad">100 requests arrive → all allowed ✅</span>
+              </div>
+              <div class="meme-timeline__row meme-timeline__row--divider">
+                <span class="meme-timeline__time">12:00:00</span>
+                <span class="meme-timeline__event meme-timeline__event--warn">⚠ Window resets</span>
+              </div>
+              <div class="meme-timeline__row">
+                <span class="meme-timeline__time">12:00:01</span>
+                <span class="meme-timeline__event meme-timeline__event--bad">100 MORE requests → all allowed ✅</span>
+              </div>
+              <div class="meme-timeline__row">
+                <span class="meme-timeline__time">result</span>
+                <span class="meme-timeline__event meme-timeline__event--fire">200 requests in 11 seconds 🔥 limit was 100/min</span>
+              </div>
+            </div>
+            <p style="margin-top:14px;font-size:.85rem;color:var(--color-text-muted)">
+              <strong>Fix:</strong> Use <code>SlidingWindow</code> — it weights the previous slot so this spike never happens.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════════
+           MEME 5 — ONE DOES NOT SIMPLY (MemoryStore in prod)
+      ═══════════════════════════════════════════════════════════════ -->
+      <div class="meme-section reveal reveal--up">
+        <div class="meme-eyebrow">Part 5 · Distributed systems</div>
+        <h2 class="meme-section__title">MemoryStore in production with multiple servers</h2>
+
+        <div class="meme-card meme-card--boromir">
+          <div class="meme-boromir__scene">
+            <div class="meme-boromir__character">
+              <div class="meme-boromir__face">🧔</div>
+              <div class="meme-boromir__cape">🧥</div>
+            </div>
+            <div class="meme-boromir__text">
+              <div class="meme-boromir__line meme-boromir__line--top">One does not simply</div>
+              <div class="meme-boromir__line meme-boromir__line--bottom">use MemoryStore<br>on multiple servers</div>
+            </div>
+          </div>
+          <div class="meme-card__caption meme-card__caption--code">
+            <div class="mini-flow mini-flow--split">
+              <div class="mini-flow__split-col">
+                <span class="mini-flow__label">❌ MemoryStore (broken at scale)</span>
+                <span class="mini-flow__box mini-flow__box--small">Server 1: 100/100 req ✅</span>
+                <span class="mini-flow__box mini-flow__box--small">Server 2: 100/100 req ✅</span>
+                <span class="mini-flow__note">= 200 requests slip through 🤡</span>
+              </div>
+              <div class="mini-flow__split-col">
+                <span class="mini-flow__label">✅ RedisStore (correct)</span>
+                <span class="mini-flow__box mini-flow__box--small mini-flow__box--green">Server 1 ──┐</span>
+                <span class="mini-flow__box mini-flow__box--small mini-flow__box--green">Server 2 ──┤→ Redis: 100 total</span>
+                <span class="mini-flow__box mini-flow__box--small mini-flow__box--green">Server 3 ──┘ atomic Lua script</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ── QUICK START GUIDE CARD ─────────────────────────────────── -->
-      <div class="guide-card">
-        <div class="guide-card__header">
-          <span class="post-tag post-tag--guide">Quick Start Guide</span>
-          <span class="post-date">3 min read</span>
-        </div>
-        <h2 class="guide-card__title">Add rate limiting to your Express app in 5 minutes</h2>
-        <p class="guide-card__sub">No experience needed. Here's exactly what to type.</p>
+      <!-- ══════════════════════════════════════════════════════════════
+           MEME 6 — DRAKE (failOpen vs failClosed)
+      ═══════════════════════════════════════════════════════════════ -->
+      <div class="meme-section reveal reveal--up">
+        <div class="meme-eyebrow">Part 6 · When Redis goes down</div>
+        <h2 class="meme-section__title">fail-open vs fail-closed</h2>
 
-        <div class="guide-steps">
-          <div class="guide-step">
-            <div class="guide-step__num">1</div>
-            <div class="guide-step__body">
-              <h4>Install the package</h4>
-              <pre><code>npm install ratelimit-engine</code></pre>
+        <div class="meme-card meme-card--drake">
+          <div class="meme-drake__panel">
+            <div class="meme-drake__drake meme-drake__drake--no">
+              <div class="meme-drake__face">🙅</div>
+            </div>
+            <div class="meme-drake__text meme-drake__text--no">
+              Blocking ALL requests when Redis goes down<br>
+              <small>(failClosed — your site is down)</small>
             </div>
           </div>
-
-          <div class="guide-step">
-            <div class="guide-step__num">2</div>
-            <div class="guide-step__body">
-              <h4>Run the setup wizard — it writes the config for you</h4>
-              <pre><code>npx ratelimit-engine</code></pre>
-              <p class="guide-step__note">The wizard asks 5 questions and generates a <code>ratelimit.config.js</code> file in your project. No manual config.</p>
+          <div class="meme-drake__panel">
+            <div class="meme-drake__drake meme-drake__drake--yes">
+              <div class="meme-drake__face">👉😎</div>
+            </div>
+            <div class="meme-drake__text meme-drake__text--yes">
+              <code>failOpen: true</code> — allow traffic through when store is unavailable, log a warning, keep running
+              <small>(your site stays up)</small>
             </div>
           </div>
-
-          <div class="guide-step">
-            <div class="guide-step__num">3</div>
-            <div class="guide-step__body">
-              <h4>Import and wire it into your app</h4>
-              <pre><code>import { limiter } from './ratelimit.config.js'
-import express from 'express'
-
-const app = express()
-
-// Protect your entire API
-app.use(limiter.express())
-
-// Or just one route
-app.post('/login', limiter.express(), (req, res) => {
-  res.json({ message: 'Logged in!' })
-})
-
-app.listen(3000)</code></pre>
-            </div>
-          </div>
-
-          <div class="guide-step">
-            <div class="guide-step__num">4</div>
-            <div class="guide-step__body">
-              <h4>Watch it work — open the live dashboard</h4>
-              <pre><code>npx ratelimit-engine dashboard</code></pre>
-              <p class="guide-step__note">A real-time terminal dashboard shows every request — allowed vs blocked — at 10ms resolution. Run your app and fire some requests to see it light up.</p>
+          <div class="meme-card__caption">
+            <div class="explainer-code-block" style="margin-top:0">
+              <div class="code-label">Configure fail-open in one line</div>
+              <pre><code>const limiter = createLimiter({
+  algorithm: new TokenBucket({ capacity: 100, refillRate: 10 }),
+  store:     new RedisStore({ client: redis }),
+  failOpen:  true,   // ← Redis down? Allow traffic, log warning
+  keyBy:     byIP,
+})</code></pre>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ── POST GRID ──────────────────────────────────────────────── -->
-      <h3 class="section-label">More articles</h3>
+      <!-- ══════════════════════════════════════════════════════════════
+           MEME 7 — EXPANDING BRAIN (composite)
+      ═══════════════════════════════════════════════════════════════ -->
+      <div class="meme-section reveal reveal--up">
+        <div class="meme-eyebrow">Part 7 · Galaxy brain engineering</div>
+        <h2 class="meme-section__title">Rate limiting levels — ascending brain power</h2>
+
+        <div class="meme-card meme-card--brain">
+          <div class="meme-brain__rows">
+            <div class="meme-brain__row meme-brain__row--1">
+              <div class="meme-brain__head">
+                <div class="meme-brain__glow meme-brain__glow--sm"></div>
+                🧠
+              </div>
+              <div class="meme-brain__text">
+                <strong>No rate limiting</strong><br>
+                <small>Ships fast. Gets DDoS'd by Thursday.</small>
+              </div>
+            </div>
+            <div class="meme-brain__row meme-brain__row--2">
+              <div class="meme-brain__head">
+                <div class="meme-brain__glow meme-brain__glow--md"></div>
+                🧠
+              </div>
+              <div class="meme-brain__text">
+                <strong>Fixed Window on everything</strong><br>
+                <small><code>limit: 100, windowMs: 60000</code> — good enough for 90% of APIs.</small>
+              </div>
+            </div>
+            <div class="meme-brain__row meme-brain__row--3">
+              <div class="meme-brain__head">
+                <div class="meme-brain__glow meme-brain__glow--lg"></div>
+                🧠
+              </div>
+              <div class="meme-brain__text">
+                <strong>Token Bucket per user + Redis</strong><br>
+                <small>Distributed. Burst-friendly. Works across 10 servers. Now we're cooking.</small>
+              </div>
+            </div>
+            <div class="meme-brain__row meme-brain__row--4">
+              <div class="meme-brain__head">
+                <div class="meme-brain__glow meme-brain__glow--xl"></div>
+                🧠
+              </div>
+              <div class="meme-brain__text">
+                <strong>Composite: TokenBucket AND SlidingWindow</strong><br>
+                <small>Burst cap + daily hard limit + per-route overrides + failOpen + live dashboard. <em>Ascended.</em></small>
+              </div>
+            </div>
+          </div>
+          <div class="meme-card__caption">
+            <div class="explainer-code-block" style="margin-top:0">
+              <div class="code-label">The galaxy-brain config</div>
+              <pre><code>const limiter = createLimiter({
+  algorithm: new Composite({
+    algorithms: [
+      new TokenBucket({ capacity: 50, refillRate: 10 }),     // burst cap
+      new SlidingWindow({ limit: 500, windowMs: 86_400_000 }),// daily limit
+    ],
+    mode: COMPOSITE_MODES.ALL,  // BOTH must pass
+  }),
+  store:    new RedisStore({ client: redis }),
+  keyBy:    byUser,
+  failOpen: true,
+})</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════════
+           POST GRID
+      ═══════════════════════════════════════════════════════════════ -->
+      <h3 class="section-label reveal reveal--fade">More deep dives</h3>
       <div class="posts-grid">
 
-        <article class="post-card">
-          <div class="post-card__top">
-            <span class="post-tag post-tag--engineering">Engineering</span>
-          </div>
-          <h3 class="post-card__title">
-            What happens when Redis goes down? fail-open vs fail-closed explained
-          </h3>
+        <article class="post-card reveal reveal--up" style="--delay:0ms">
+          <div class="post-card__top"><span class="post-tag post-tag--engineering">Engineering</span></div>
+          <h3 class="post-card__title">What happens when Redis goes down? fail-open vs fail-closed</h3>
           <p class="post-card__excerpt">
             Every rate limiter must answer one question: what do you do when the store is unavailable?
-            Allow everything (fail-open) or block everything (fail-closed)?
-            Here's how to decide — and how <code>failOpen: true</code> works in ratelimit-engine.
+            <code>failOpen: true</code> keeps your site up. <code>failOpen: false</code> keeps it strictly enforced.
           </p>
           <div class="post-card__visual">
             <div class="mini-flow">
@@ -257,143 +507,110 @@ app.listen(3000)</code></pre>
               <span class="mini-flow__arrow">→</span>
               <span class="mini-flow__box mini-flow__box--red">Redis down</span>
               <span class="mini-flow__arrow">→</span>
-              <span class="mini-flow__box mini-flow__box--green">failOpen: ✅ allow</span>
+              <span class="mini-flow__box mini-flow__box--green">failOpen → ✅ allow</span>
             </div>
           </div>
           <div class="post-card__footer">
             <span class="post-card__author">Abhinav Kumar</span>
-            <span class="post-card__read">~5 min read</span>
+            <span class="post-card__read">~5 min</span>
           </div>
         </article>
 
-        <article class="post-card">
-          <div class="post-card__top">
-            <span class="post-tag post-tag--deepdive">Deep Dive</span>
-          </div>
-          <h3 class="post-card__title">
-            Composite rate limiting — burst caps AND daily hard limits at the same time
-          </h3>
+        <article class="post-card reveal reveal--up" style="--delay:60ms">
+          <div class="post-card__top"><span class="post-tag post-tag--deepdive">Deep Dive</span></div>
+          <h3 class="post-card__title">Composite rate limiting — burst caps AND daily limits at once</h3>
           <p class="post-card__excerpt">
-            What if you want to allow short bursts but still enforce a daily cap?
-            The Composite algorithm lets you stack two algorithms together.
-            Run both in <code>ALL</code> mode — a request must pass both to get through.
+            Stack two algorithms with <code>ALL</code> mode. A request must pass both to get through.
+            Enforce burst caps without relaxing daily hard limits.
           </p>
           <div class="post-card__visual">
             <div class="mini-flow mini-flow--vertical">
               <span class="mini-flow__box mini-flow__box--blue">Request</span>
               <span class="mini-flow__arrow">↓</span>
               <span class="mini-flow__row">
-                <span class="mini-flow__box mini-flow__box--purple">TokenBucket (burst)</span>
+                <span class="mini-flow__box mini-flow__box--purple">TokenBucket</span>
                 <span class="mini-flow__and">AND</span>
-                <span class="mini-flow__box mini-flow__box--purple">FixedWindow (daily)</span>
+                <span class="mini-flow__box mini-flow__box--purple">SlidingWindow</span>
               </span>
               <span class="mini-flow__arrow">↓</span>
-              <span class="mini-flow__box mini-flow__box--green">Both pass → ✅ allowed</span>
+              <span class="mini-flow__box mini-flow__box--green">Both pass → ✅</span>
             </div>
           </div>
           <div class="post-card__footer">
             <span class="post-card__author">Abhinav Kumar</span>
-            <span class="post-card__read">~6 min read</span>
+            <span class="post-card__read">~6 min</span>
           </div>
         </article>
 
-        <article class="post-card">
-          <div class="post-card__top">
-            <span class="post-tag post-tag--engineering">Architecture</span>
-          </div>
-          <h3 class="post-card__title">
-            Why MemoryStore isn't enough when you scale to multiple servers
-          </h3>
+        <article class="post-card reveal reveal--up" style="--delay:120ms">
+          <div class="post-card__top"><span class="post-tag post-tag--engineering">Architecture</span></div>
+          <h3 class="post-card__title">Why MemoryStore isn't enough when you scale to multiple servers</h3>
           <p class="post-card__excerpt">
-            If you run two instances of your app, each has its own in-memory counter.
-            User A can hit Server 1 100 times and Server 2 100 times — bypassing your limit entirely.
-            Here's why Redis with atomic Lua scripts solves this.
+            Two instances of your app means two independent counters. Redis with atomic Lua scripts is the only correct solution.
           </p>
           <div class="post-card__visual">
             <div class="mini-flow mini-flow--split">
               <div class="mini-flow__split-col">
-                <span class="mini-flow__label">❌ Memory (broken)</span>
-                <span class="mini-flow__box mini-flow__box--small">Server 1: 100/100</span>
-                <span class="mini-flow__box mini-flow__box--small">Server 2: 100/100</span>
-                <span class="mini-flow__note">= 200 requests slip through</span>
+                <span class="mini-flow__label">❌ Memory</span>
+                <span class="mini-flow__box mini-flow__box--small">S1: 100/100</span>
+                <span class="mini-flow__box mini-flow__box--small">S2: 100/100</span>
+                <span class="mini-flow__note">200 slip through</span>
               </div>
               <div class="mini-flow__split-col">
-                <span class="mini-flow__label">✅ Redis (correct)</span>
-                <span class="mini-flow__box mini-flow__box--small mini-flow__box--green">Server 1 ──┐</span>
-                <span class="mini-flow__box mini-flow__box--small mini-flow__box--green">Server 2 ──┤→ Redis: 100 total</span>
+                <span class="mini-flow__label">✅ Redis</span>
+                <span class="mini-flow__box mini-flow__box--small mini-flow__box--green">S1+S2 → 100 total</span>
               </div>
             </div>
           </div>
           <div class="post-card__footer">
             <span class="post-card__author">Abhinav Kumar</span>
-            <span class="post-card__read">~10 min read</span>
+            <span class="post-card__read">~10 min</span>
           </div>
         </article>
 
-        <article class="post-card">
-          <div class="post-card__top">
-            <span class="post-tag post-tag--guide">Tutorial</span>
-          </div>
-          <h3 class="post-card__title">
-            Write your own rate limit algorithm in 20 lines of JavaScript
-          </h3>
+        <article class="post-card reveal reveal--up" style="--delay:0ms">
+          <div class="post-card__top"><span class="post-tag post-tag--guide">Tutorial</span></div>
+          <h3 class="post-card__title">Write your own rate limit algorithm in 20 lines of JavaScript</h3>
           <p class="post-card__excerpt">
-            ratelimit-engine treats algorithms as plugins. Extend <code>BaseAlgorithm</code>,
-            implement <code>check()</code> and <code>reset()</code>, and your custom algorithm
-            works everywhere the built-in ones do — including the live dashboard.
+            Extend <code>BaseAlgorithm</code>, implement <code>check()</code> and <code>reset()</code> — your algorithm works everywhere the built-ins do.
           </p>
           <div class="post-card__visual">
             <pre class="mini-code"><code>class MyAlgorithm extends BaseAlgorithm {
   async check(key, store) {
-    // your logic here
     return { allowed: true, remaining: 99 }
   }
 }</code></pre>
           </div>
           <div class="post-card__footer">
             <span class="post-card__author">Abhinav Kumar</span>
-            <span class="post-card__read">~8 min read</span>
+            <span class="post-card__read">~8 min</span>
           </div>
         </article>
 
-        <article class="post-card">
-          <div class="post-card__top">
-            <span class="post-tag post-tag--deepdive">Monitoring</span>
-          </div>
-          <h3 class="post-card__title">
-            See your rate limits in real time — the 10ms live dashboard
-          </h3>
+        <article class="post-card reveal reveal--up" style="--delay:60ms">
+          <div class="post-card__top"><span class="post-tag post-tag--deepdive">Monitoring</span></div>
+          <h3 class="post-card__title">See your rate limits in real time — the 10ms live dashboard</h3>
           <p class="post-card__excerpt">
-            Most developers add rate limiting and never know if it's actually working.
-            The live dashboard shows you every request — allowed vs blocked — with a sparkline
-            chart, top IPs, and a live feed. All in your terminal, no browser needed.
+            Most developers add rate limiting and never know if it's working. The live dashboard shows every request — sparkline, top IPs, live feed — all in your terminal.
           </p>
           <div class="post-card__visual">
             <pre class="mini-code mini-code--dashboard"><code>⚡ ratelimit-engine  Live Dashboard
 
   Total   ████████████  56 req
   Allowed ████░░░░░░░░  14 req
-  Blocked ████████████  42 req  75%
-
-  ▁▂▃▅▇█▇▅▃▂▁▂▄▆█▇▄▂▁▃</code></pre>
+  Blocked ████████████  42 req  75%</code></pre>
           </div>
           <div class="post-card__footer">
             <span class="post-card__author">Abhinav Kumar</span>
-            <span class="post-card__read">~4 min read</span>
+            <span class="post-card__read">~4 min</span>
           </div>
         </article>
 
-        <article class="post-card">
-          <div class="post-card__top">
-            <span class="post-tag post-tag--engineering">Best Practices</span>
-          </div>
-          <h3 class="post-card__title">
-            Rate limit by IP, user, route — or all three at once
-          </h3>
+        <article class="post-card reveal reveal--up" style="--delay:120ms">
+          <div class="post-card__top"><span class="post-tag post-tag--engineering">Best Practices</span></div>
+          <h3 class="post-card__title">Rate limit by IP, user, route — or all three at once</h3>
           <p class="post-card__excerpt">
-            Choosing the right key strategy matters. IP-based limiting is easy but unfair on shared networks.
-            User-based is more accurate but requires auth. Route-based lets you have different
-            limits per endpoint. Here's how to combine them.
+            IP-based is easy but unfair on shared networks. User-based is accurate. Route-based lets you fine-tune per endpoint. Combine them all.
           </p>
           <div class="post-card__visual">
             <div class="mini-flow mini-flow--keys">
@@ -405,47 +622,46 @@ app.listen(3000)</code></pre>
           </div>
           <div class="post-card__footer">
             <span class="post-card__author">Abhinav Kumar</span>
-            <span class="post-card__read">~6 min read</span>
+            <span class="post-card__read">~6 min</span>
           </div>
         </article>
 
       </div>
 
-      <!-- ── NOTIFY ─────────────────────────────────────────────────── -->
-      <div class="blog-notify">
+      <!-- NOTIFY -->
+      <div class="blog-notify reveal reveal--up">
         <div class="blog-notify__icon">📬</div>
         <h3>Stay up to date</h3>
-        <p>
-          New articles, features, and releases are announced on GitHub.<br />
-          Watch the repo or follow <a href="https://github.com/Abhinav710" target="_blank">@Abhinav710</a> to get notified.
-        </p>
+        <p>New articles, features, and releases are announced on GitHub.<br />
+        Watch the repo or follow <a href="https://github.com/Abhinav710" target="_blank">@Abhinav710</a> to get notified.</p>
         <div class="blog-notify__actions">
           <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank" class="btn btn--primary">Watch on GitHub</a>
-          <a href="https://www.npmjs.com/package/ratelimit-engine" target="_blank" class="btn btn--secondary">View on npm</a>
+          <a href="https://www.npmjs.com/package/ratelimit-engine" target="_blank" class="btn btn--ghost">View on npm</a>
         </div>
       </div>
 
     </div>
   </section>
 
-  <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer__inner">
-      <div class="footer__brand">
-        <span class="nav__logo-icon">⚡</span>
-        <span>ratelimit-engine</span>
-      </div>
+      <div class="footer__brand"><span class="nav__logo-icon">⚡</span><span>ratelimit-engine</span></div>
       <div class="footer__links">
         <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank">GitHub</a>
         <a href="https://www.npmjs.com/package/ratelimit-engine" target="_blank">npm</a>
         <a href="https://github.com/Abhinav710/ratelimit-engine/blob/main/CONTRIBUTING.md" target="_blank">Contributing</a>
         <a href="index.html">Home</a>
       </div>
-      <div class="footer__copy">
-        MIT License · Built by <a href="https://github.com/Abhinav710" target="_blank">Abhinav710</a>
-      </div>
+      <div class="footer__copy">MIT License · Built by <a href="https://github.com/Abhinav710" target="_blank">Abhinav710</a></div>
     </div>
   </footer>
 
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <script src="main.js"></script>
+  <script src="blog.js"></script>
 </body>
 </html>
