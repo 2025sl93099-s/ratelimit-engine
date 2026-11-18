@@ -831,162 +831,335 @@ code { font-family: var(--font-mono); }
 .bar-green { color: var(--color-green); }
 .bar-red   { color: var(--color-red); }
 
-/* ── Architecture — animated SVG wires ────────────────────────────── */
-.arch-diagram {
-  max-width: 700px;
-  margin: 0 auto;
-  position: relative;
+/* ── HIW (How It Works) — sticky scroll architecture ─────────────── */
+
+/* Extra keyframes needed */
+@keyframes hiw-wire-flow { to { stroke-dashoffset: -36px; } }
+@keyframes ag-dash       { to { stroke-dashoffset: -48px; } }
+@keyframes ag-orbit-a    { to { transform: rotate(1turn); } }
+@keyframes ag-orbit-b    { to { transform: rotate(-1turn); } }
+@keyframes ag-dot-pulse  { 50% { opacity: .3; } }
+@keyframes ag-hub {
+  50% {
+    box-shadow:
+      0 0 26px -2px rgba(124,106,247,.62),
+      0 14px 32px -6px rgba(124,106,247,.8),
+      0 1px 0 rgba(255,254,249,.4) inset,
+      0 -8px 16px -10px rgba(11,7,16,.34) inset;
+  }
+}
+@keyframes hiw-fill-in {
+  0%  { transform: scaleX(.22); }
+  100%{ transform: scaleX(1); }
+}
+@keyframes node-lift {
+  from { transform: translateY(0)    scale(1); }
+  to   { transform: translateY(-12px) scale(1.045); }
 }
 
-/* SVG wire canvas behind everything */
-.arch-wires {
+.hiw-section { overflow: hidden; }
+
+/* Two-column sticky layout */
+.hiw-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+/* ── Left: step list ──────────────────────────────────────────────── */
+.hiw-steps {
+  position: relative;
+  padding-left: 32px;
+}
+
+/* Vertical rail */
+.hiw-rail {
+  position: absolute;
+  left: 0; top: 8px; bottom: 8px;
+  width: 2px;
+}
+
+.hiw-rail__track {
+  position: absolute;
+  inset: 0;
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+.hiw-rail__fill {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: var(--color-accent);
+  border-radius: 2px;
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform .14s linear;
+  box-shadow: 0 0 8px rgba(124,106,247,.5);
+}
+
+/* Each step */
+.hiw-step {
+  display: flex;
+  gap: 20px;
+  padding: 28px 0;
+  position: relative;
+  opacity: .45;
+  transition: opacity .4s var(--ease);
+}
+
+.hiw-step.is-active { opacity: 1; }
+
+.hiw-step__dot {
+  position: absolute;
+  left: -39px; top: 36px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  transition: background .4s var(--ease), border-color .4s, box-shadow .4s;
+  z-index: 1;
+}
+
+.hiw-step.is-active .hiw-step__dot {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 12px rgba(124,106,247,.6);
+}
+
+.hiw-step__body { flex: 1; }
+
+.hiw-step__num {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--color-accent-2);
+  margin-bottom: 6px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .4s var(--ease), transform .4s var(--ease);
+}
+
+.hiw-step.is-active .hiw-step__num {
+  opacity: 1;
+  transform: none;
+}
+
+.hiw-step__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -.015em;
+  margin-bottom: 8px;
+}
+
+.hiw-step__desc {
+  font-size: .875rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.hiw-step__desc code {
+  background: var(--color-code-bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: .8rem;
+  color: var(--color-accent-2);
+}
+
+/* ── Right: sticky diagram ────────────────────────────────────────── */
+.hiw-diagram-wrap {
+  position: sticky;
+  top: 90px;
+}
+
+.hiw-diagram {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.05;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+/* Dot grid background */
+.hiw-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+/* SVG wire layer */
+.hiw-svg {
   position: absolute;
   inset: 0;
   width: 100%; height: 100%;
   pointer-events: none;
-  overflow: visible;
 }
 
-/* Flowing dash animation — exact curriculo.me stroke-dashoffset trick */
-.arch-wires .wire {
+/* Wire default — dim dashed */
+.hiw-svg .hiw-wire {
   fill: none;
-  stroke: rgba(124,106,247,.25);
+  stroke: rgba(255,255,255,.08);
   stroke-width: 1.5;
-  stroke-dasharray: 6 6;
-  animation: wire-flow 1.2s linear infinite;
+  transition: stroke .4s var(--ease), stroke-width .4s, opacity .4s;
 }
 
-.arch-wires .wire--fast {
-  stroke: rgba(96,165,250,.2);
-  stroke-dasharray: 4 8;
-  animation: wire-flow-fast .9s linear infinite;
+/* Wire active — flowing dashoffset (exact curriculo.me) */
+.hiw-svg .hiw-wire.is-active {
+  stroke-width: 2.25;
+  stroke-dasharray: 10 8;
+  animation: hiw-wire-flow 1.15s linear infinite;
 }
 
-.arch-wires .wire--algo {
-  stroke: rgba(251,191,36,.2);
-  stroke-dasharray: 5 7;
-  animation: wire-flow 1.6s linear infinite;
-  animation-delay: -.4s;
+.hiw-wire--app     { --wire-color: rgba(96,165,250,.7); }
+.hiw-wire--adapter { --wire-color: rgba(74,222,128,.7); }
+.hiw-wire--algo    { --wire-color: rgba(251,191,36,.7); }
+.hiw-wire--store   { --wire-color: rgba(251,113,133,.7); }
+
+.hiw-svg .hiw-wire.is-active { stroke: var(--wire-color, rgba(124,106,247,.8)); }
+
+/* Pulsing dot on active wire */
+.hiw-svg .hiw-pulse-dot {
+  opacity: 0;
+  transition: opacity .3s;
+}
+.hiw-svg .hiw-pulse-dot.is-active {
+  opacity: 1;
+  animation: ag-dot-pulse 2.6s ease-in-out infinite;
 }
 
-.arch-wires .wire--store {
-  stroke: rgba(251,113,133,.2);
-  stroke-dasharray: 5 7;
-  animation: wire-flow 1.6s linear infinite;
-  animation-delay: -.8s;
+/* ── Nodes ────────────────────────────────────────────────────────── */
+.hiw-node {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  min-width: 90px;
+  text-align: center;
+  cursor: default;
+  transition:
+    transform .52s var(--ease),
+    filter .52s var(--ease),
+    border-color .4s var(--ease),
+    box-shadow .4s var(--ease);
+  z-index: 2;
 }
 
-/* Orbit rings around engine node */
-.arch-orbit {
+/* Node positions — percentage-based so they scale with diagram */
+.hiw-node--app     { top: 4%;   left: 50%; transform: translateX(-50%); }
+.hiw-node--adapter { top: 26%;  left: 50%; transform: translateX(-50%); }
+.hiw-node--engine  { top: 48%;  left: 50%; transform: translateX(-50%); }
+.hiw-node--algo    { bottom: 6%; left: 12%; }
+.hiw-node--store   { bottom: 6%; right: 12%; }
+
+/* Active node — lift + glow (exact curriculo.me hiw-iso.is-active) */
+.hiw-node.is-active {
+  border-color: var(--node-color, var(--color-accent));
+  box-shadow: 0 0 0 1px var(--node-color, var(--color-accent)),
+              0 16px 20px rgba(0,0,0,.3);
+}
+
+/* Active lift — only for non-engine nodes (engine has hub pulse) */
+.hiw-node:not(.is-hub).is-active {
+  transform: translateY(-12px) scale(1.045) translateX(var(--tx, 0));
+}
+/* Preserve translateX centering on top nodes */
+.hiw-node--app.is-active,
+.hiw-node--adapter.is-active {
+  transform: translateX(-50%) translateY(-12px) scale(1.045);
+}
+
+--node-colors:;
+.hiw-node--app     { --node-color: rgba(96,165,250,.8); }
+.hiw-node--adapter { --node-color: rgba(74,222,128,.8); }
+.hiw-node--engine  { --node-color: rgba(124,106,247,.8); }
+.hiw-node--algo    { --node-color: rgba(251,191,36,.8); }
+.hiw-node--store   { --node-color: rgba(251,113,133,.8); }
+
+.hiw-node__icon  { font-size: 1.4rem; line-height: 1; }
+.hiw-node__label { font-size: .78rem; font-weight: 700; color: var(--color-text); }
+.hiw-node__sub   { font-size: .68rem; color: var(--color-text-dim); }
+
+/* Hub engine — pulse rings + ag-hub glow */
+.hiw-node--engine { background: var(--color-accent-glow); }
+
+.hiw-node__pulse-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 18px;
+  border: 1px solid rgba(124,106,247,.2);
+  opacity: 0;
+  transition: opacity .4s;
+}
+
+.hiw-node__pulse-ring--2 {
+  inset: -16px;
+  border-radius: 24px;
+  border-color: rgba(124,106,247,.1);
+}
+
+.hiw-node--engine.is-active .hiw-node__pulse-ring {
+  opacity: 1;
+  animation: dot-pulse 1.8s ease-in-out infinite;
+}
+
+.hiw-node--engine.is-active .hiw-node__pulse-ring--2 {
+  animation: dot-pulse 1.8s ease-in-out infinite .4s;
+}
+
+.hiw-node--engine.is-active {
+  animation: ag-hub 1.8s ease-in-out infinite;
+}
+
+/* ── Orbit rings ──────────────────────────────────────────────────── */
+.hiw-orbit {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
+  top: 50%; left: 50%;
+  border: 1px dashed rgba(124,106,247,.15);
+  opacity: 0;
+  transition: opacity .5s var(--ease);
 }
 
-.arch-orbit--outer {
-  width: 220px; height: 220px;
-  border: 1px dashed rgba(124,106,247,.18);
-  animation: orbit-cw 18s linear infinite;
-  transform-origin: center;
+.hiw-orbit--a {
+  width: 180px; height: 180px;
+  margin: -90px 0 0 -90px;
+  animation: ag-orbit-a 12s linear infinite;
 }
 
-.arch-orbit--inner {
-  width: 140px; height: 140px;
-  border: 1px dashed rgba(96,165,250,.14);
-  animation: orbit-ccw 12s linear infinite;
-  transform-origin: center;
+.hiw-orbit--b {
+  width: 240px; height: 240px;
+  margin: -120px 0 0 -120px;
+  border-color: rgba(96,165,250,.1);
+  animation: ag-orbit-b 19s linear infinite;
 }
 
-/* Orbit dot riders */
-.arch-orbit__dot {
+.hiw-orbit.is-live { opacity: 1; }
+
+.hiw-orbit__dot {
   position: absolute;
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--color-accent);
-  box-shadow: 0 0 8px var(--color-accent);
+  box-shadow: 0 0 6px var(--color-accent), 0 0 12px var(--color-accent);
   top: -4px; left: calc(50% - 4px);
-  animation: dot-pulse 2s ease-in-out infinite;
+  animation: ag-dot-pulse 2.6s ease-in-out infinite;
 }
 
-.arch-orbit--inner .arch-orbit__dot {
+.hiw-orbit__dot--b {
   background: #60a5fa;
-  box-shadow: 0 0 8px #60a5fa;
-  animation-delay: -.6s;
-}
-
-/* Layer boxes */
-.arch-layers {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.arch-layer {
-  width: 100%;
-  border-radius: 12px;
-  padding: 18px 24px;
-  text-align: center;
-  position: relative;
-  transition: transform .3s var(--ease), box-shadow .3s;
-}
-
-.arch-layer:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.3); }
-
-.arch-layer__label { font-weight: 700; font-size: .95rem; margin-bottom: 4px; }
-.arch-layer__desc  { font-size: .8rem; color: var(--color-text-muted); }
-
-.arch-layer__badge {
-  position: absolute;
-  top: -10px; right: 16px;
-  background: var(--color-accent);
-  color: #fff;
-  font-size: .68rem; font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 100px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-}
-
-.arch-layer--app     { background: rgba(96,165,250,.1);    border: 1px solid rgba(96,165,250,.25); }
-.arch-layer--adapter { background: rgba(74,222,128,.08);   border: 1px solid rgba(74,222,128,.2); }
-.arch-layer--engine  { background: var(--color-accent-glow); border: 1px solid rgba(124,106,247,.35); }
-.arch-layer--algo    { background: rgba(251,191,36,.06);   border: 1px solid rgba(251,191,36,.2); flex: 1; }
-.arch-layer--store   { background: rgba(251,113,133,.06);  border: 1px solid rgba(251,113,133,.2); flex: 1; }
-
-/* Engine node — the animated hub */
-.arch-engine-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 20px 0;
-}
-
-.arch-connector {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: .72rem;
-  color: var(--color-text-dim);
-  padding: 6px 0;
-  width: 100%;
-  justify-content: center;
-}
-
-.arch-connector__line {
-  flex: 1; max-width: 80px; height: 1px;
-  background: var(--color-border);
-}
-
-.arch-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  width: 100%;
+  box-shadow: 0 0 6px #60a5fa, 0 0 12px #60a5fa;
+  animation-delay: -.8s;
 }
 
 /* ── Blog cards ────────────────────────────────────────────────────── */
@@ -1152,6 +1325,10 @@ code { font-family: var(--font-mono); }
   .cli-grid { grid-template-columns: 1fr; }
   .algo-panel.active { grid-template-columns: 1fr; }
   .algo-panel__info { border-right: none; border-bottom: 1px solid var(--color-border); }
+  /* HIW collapses to single column */
+  .hiw-layout { grid-template-columns: 1fr; gap: 40px; }
+  .hiw-diagram-wrap { position: static; }
+  .hiw-diagram { max-width: 340px; aspect-ratio: 1 / 1.1; }
 }
 
 @media (max-width: 768px) {

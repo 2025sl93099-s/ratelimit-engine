@@ -496,7 +496,7 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
   </section>
 
   <!-- ── ARCHITECTURE ──────────────────────────────────────────────── -->
-  <section class="section" id="architecture">
+  <section class="section hiw-section" id="architecture">
     <div class="container">
       <div class="section__header reveal reveal--up">
         <div class="section__eyebrow">Design Principles</div>
@@ -504,72 +504,106 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
         <p class="section__sub">Four clean layers. Each independently replaceable.</p>
       </div>
 
-      <div class="arch-diagram reveal reveal--up" style="--delay: 100ms" id="archDiagram">
+      <div class="hiw-layout" id="hiwLayout">
 
-        <!-- SVG flowing wires — drawn by JS after layout -->
-        <svg class="arch-wires" id="archWires" aria-hidden="true"></svg>
-
-        <div class="arch-layers">
-
-          <!-- App layer -->
-          <div class="arch-layer arch-layer--app" id="archApp">
-            <div class="arch-layer__label">Your Application</div>
-            <div class="arch-layer__desc">Express · Fastify · Any HTTP framework</div>
+        <!-- LEFT: step list with vertical rail -->
+        <div class="hiw-steps" id="hiwSteps">
+          <div class="hiw-rail">
+            <div class="hiw-rail__track"></div>
+            <div class="hiw-rail__fill" id="hiwRailFill"></div>
           </div>
 
-          <div class="arch-connector">
-            <div class="arch-connector__line"></div>
-            <span>req / res</span>
-            <div class="arch-connector__line"></div>
-          </div>
-
-          <!-- Adapter layer -->
-          <div class="arch-layer arch-layer--adapter" id="archAdapter">
-            <div class="arch-layer__label">Framework Adapters</div>
-            <div class="arch-layer__desc">Extracts RequestContext → calls engine → writes headers</div>
-          </div>
-
-          <div class="arch-connector">
-            <div class="arch-connector__line"></div>
-            <span>RequestContext / RateLimitResult</span>
-            <div class="arch-connector__line"></div>
-          </div>
-
-          <!-- Engine — orbit hub -->
-          <div class="arch-engine-wrap">
-            <!-- Orbit rings -->
-            <div class="arch-orbit arch-orbit--outer" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">
-              <div class="arch-orbit__dot"></div>
-            </div>
-            <div class="arch-orbit arch-orbit--inner" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">
-              <div class="arch-orbit__dot"></div>
-            </div>
-            <div class="arch-layer arch-layer--engine" id="archEngine" style="position:relative;z-index:1;width:100%">
-              <div class="arch-layer__badge">Core</div>
-              <div class="arch-layer__label">Engine</div>
-              <div class="arch-layer__desc">KeyResolver · RateLimiter · HeaderWriter · Hooks · Logging</div>
+          <div class="hiw-step" data-step="0">
+            <div class="hiw-step__dot"></div>
+            <div class="hiw-step__body">
+              <div class="hiw-step__num">01</div>
+              <h3 class="hiw-step__title">Your Application</h3>
+              <p class="hiw-step__desc">Express, Fastify, or any HTTP framework sends a request. The adapter layer extracts IP, method, path, and headers into a <code>RequestContext</code>.</p>
             </div>
           </div>
 
-          <div class="arch-connector">
-            <div class="arch-connector__line"></div>
-            <span>key + store</span>
-            <div class="arch-connector__line"></div>
-          </div>
-
-          <!-- Bottom two layers -->
-          <div class="arch-bottom">
-            <div class="arch-layer arch-layer--algo" id="archAlgo">
-              <div class="arch-layer__label">Algorithm Layer</div>
-              <div class="arch-layer__desc">FixedWindow · SlidingWindow · TokenBucket · LeakyBucket · Composite · <em>Your own</em></div>
-            </div>
-            <div class="arch-layer arch-layer--store" id="archStore">
-              <div class="arch-layer__label">Store Layer</div>
-              <div class="arch-layer__desc">MemoryStore · RedisStore (atomic Lua) · <em>Your own</em></div>
+          <div class="hiw-step" data-step="1">
+            <div class="hiw-step__dot"></div>
+            <div class="hiw-step__body">
+              <div class="hiw-step__num">02</div>
+              <h3 class="hiw-step__title">Framework Adapters</h3>
+              <p class="hiw-step__desc">Thin adapter converts the framework-specific req/res into a neutral <code>RequestContext</code>, calls the engine, and writes standard <code>X-RateLimit-*</code> headers back.</p>
             </div>
           </div>
 
+          <div class="hiw-step" data-step="2">
+            <div class="hiw-step__dot"></div>
+            <div class="hiw-step__body">
+              <div class="hiw-step__num">03</div>
+              <h3 class="hiw-step__title">Engine — the core</h3>
+              <p class="hiw-step__desc">The engine resolves the key, asks the algorithm, reads/writes the store atomically, fires hooks, and logs. Zero framework knowledge. Fully unit-testable.</p>
+            </div>
+          </div>
+
+          <div class="hiw-step" data-step="3">
+            <div class="hiw-step__dot"></div>
+            <div class="hiw-step__body">
+              <div class="hiw-step__num">04</div>
+              <h3 class="hiw-step__title">Algorithm + Store</h3>
+              <p class="hiw-step__desc">The algorithm (TokenBucket, SlidingWindow, Composite…) runs against a pluggable store. MemoryStore for dev, RedisStore with atomic Lua scripts for distributed production.</p>
+            </div>
+          </div>
         </div>
+
+        <!-- RIGHT: sticky animated diagram -->
+        <div class="hiw-diagram-wrap" id="hiwDiagramWrap">
+          <div class="hiw-diagram" id="hiwDiagram">
+
+            <!-- Background dot grid -->
+            <div class="hiw-grid" aria-hidden="true"></div>
+
+            <!-- SVG wires between nodes -->
+            <svg class="hiw-svg" id="hiwSvg" aria-hidden="true" overflow="visible"></svg>
+
+            <!-- Nodes -->
+            <div class="hiw-node hiw-node--app"     data-node="0" id="hnApp">
+              <div class="hiw-node__icon">🌐</div>
+              <div class="hiw-node__label">Your App</div>
+              <div class="hiw-node__sub">Express / Fastify</div>
+            </div>
+
+            <div class="hiw-node hiw-node--adapter" data-node="1" id="hnAdapter">
+              <div class="hiw-node__icon">🔌</div>
+              <div class="hiw-node__label">Adapter</div>
+              <div class="hiw-node__sub">RequestContext</div>
+            </div>
+
+            <div class="hiw-node hiw-node--engine is-hub" data-node="2" id="hnEngine">
+              <div class="hiw-node__pulse-ring"></div>
+              <div class="hiw-node__pulse-ring hiw-node__pulse-ring--2"></div>
+              <div class="hiw-node__icon">⚡</div>
+              <div class="hiw-node__label">Engine</div>
+              <div class="hiw-node__sub">Core</div>
+            </div>
+
+            <div class="hiw-node hiw-node--algo"    data-node="3" id="hnAlgo">
+              <div class="hiw-node__icon">🧮</div>
+              <div class="hiw-node__label">Algorithm</div>
+              <div class="hiw-node__sub">TokenBucket…</div>
+            </div>
+
+            <div class="hiw-node hiw-node--store"   data-node="3" id="hnStore">
+              <div class="hiw-node__icon">🗄️</div>
+              <div class="hiw-node__label">Store</div>
+              <div class="hiw-node__sub">Redis / Memory</div>
+            </div>
+
+            <!-- Orbit rings around engine -->
+            <div class="hiw-orbit hiw-orbit--a" aria-hidden="true">
+              <div class="hiw-orbit__dot"></div>
+            </div>
+            <div class="hiw-orbit hiw-orbit--b" aria-hidden="true">
+              <div class="hiw-orbit__dot hiw-orbit__dot--b"></div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
