@@ -10,77 +10,120 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
-<body>
+<body class="motion-ready">
 
   <!-- ── NAV ─────────────────────────────────────────────────────── -->
-  <nav class="nav">
+  <nav class="nav" id="nav">
     <div class="nav__inner">
       <a href="#" class="nav__logo">
         <span class="nav__logo-icon">⚡</span>
         ratelimit-engine
       </a>
-      <ul class="nav__links">
-        <li><a href="#features">Features</a></li>
-        <li><a href="#algorithms">Algorithms</a></li>
-        <li><a href="#usage">Usage</a></li>
-        <li><a href="#architecture">Architecture</a></li>
-        <li><a href="blog.html" class="nav__link--blog">Blog</a></li>
+
+      <ul class="nav__links" id="navLinks">
+        <li><a href="#features" class="nav__item">Features</a></li>
+        <li><a href="#algorithms" class="nav__item">Algorithms</a></li>
+        <li><a href="#usage" class="nav__item">Usage</a></li>
+        <li><a href="#architecture" class="nav__item">Architecture</a></li>
+        <li><a href="blog.html" class="nav__item nav__item--blog">Blog</a></li>
         <li>
-          <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank" class="nav__link--github">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank" class="nav__item nav__item--github">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
             GitHub
           </a>
         </li>
       </ul>
+
+      <!-- Mobile hamburger -->
+      <button class="nav__burger" id="navBurger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
   <!-- ── HERO ─────────────────────────────────────────────────────── -->
-  <section class="hero">
+  <section class="hero" id="hero">
+    <!-- Animated background blobs -->
+    <div class="hero__blob hero__blob--1" aria-hidden="true"></div>
+    <div class="hero__blob hero__blob--2" aria-hidden="true"></div>
+    <div class="hero__blob hero__blob--3" aria-hidden="true"></div>
+
     <div class="hero__inner">
-      <div class="hero__badge">v1.0.0 — MIT License</div>
+      <div class="hero__eyebrow reveal reveal--fade">Open Source · MIT License · Node.js ≥ 18</div>
+
       <h1 class="hero__title">
-        Rate limiting where<br />
-        <span class="hero__title--accent">the algorithm is yours</span>
+        <span class="hero__line reveal reveal--up" style="--delay: 0ms">Rate limiting where</span>
+        <span class="hero__line hero__line--accent reveal reveal--up" style="--delay: 80ms">the algorithm is yours</span>
       </h1>
-      <p class="hero__subtitle">
+
+      <p class="hero__subtitle reveal reveal--up" style="--delay: 180ms">
         Enterprise-grade Node.js rate limiting engine. Swap algorithms, compose policies,
         plug in any store — without touching the engine.
       </p>
 
-      <div class="hero__install">
+      <div class="hero__install reveal reveal--up" style="--delay: 260ms">
         <div class="install-box">
           <span class="install-box__prefix">$</span>
           <code id="installCmd">npm install ratelimit-engine</code>
-          <button class="install-box__copy" onclick="copyInstall()" title="Copy">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <button class="install-box__copy" onclick="copyInstall()" title="Copy to clipboard">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           </button>
         </div>
       </div>
 
-      <div class="hero__ctas">
-        <a href="#usage" class="btn btn--primary">Get Started</a>
-        <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank" class="btn btn--ghost">View on GitHub</a>
+      <div class="hero__ctas reveal reveal--up" style="--delay: 320ms">
+        <a href="#usage" class="btn btn--primary">
+          Get Started
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank" class="btn btn--ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          View on GitHub
+        </a>
       </div>
 
-      <div class="hero__stats">
+      <!-- Floating pills -->
+      <div class="hero__pills reveal reveal--fade" style="--delay: 500ms" aria-hidden="true">
+        <div class="hero__pill hero__pill--1">
+          <span class="hero__pill-dot hero__pill-dot--green"></span>
+          Token Bucket
+        </div>
+        <div class="hero__pill hero__pill--2">
+          <span class="hero__pill-dot hero__pill-dot--blue"></span>
+          Redis Atomic
+        </div>
+        <div class="hero__pill hero__pill--3">
+          <span class="hero__pill-dot hero__pill-dot--amber"></span>
+          Composite
+        </div>
+        <div class="hero__pill hero__pill--4">
+          <span class="hero__pill-dot hero__pill-dot--pink"></span>
+          Live Dashboard
+        </div>
+        <div class="hero__pill hero__pill--5">
+          <span class="hero__pill-dot hero__pill-dot--purple"></span>
+          Setup Wizard
+        </div>
+      </div>
+
+      <div class="hero__stats reveal reveal--up" style="--delay: 420ms">
         <div class="stat">
-          <span class="stat__num">5</span>
-          <span class="stat__label">Built-in algorithms</span>
+          <span class="stat__num" data-count="5">0</span>
+          <span class="stat__label">Algorithms</span>
         </div>
         <div class="stat__divider"></div>
         <div class="stat">
-          <span class="stat__num">2</span>
+          <span class="stat__num" data-count="2">0</span>
           <span class="stat__label">Store backends</span>
         </div>
         <div class="stat__divider"></div>
         <div class="stat">
-          <span class="stat__num">37</span>
+          <span class="stat__num" data-count="37">0</span>
           <span class="stat__label">Tests passing</span>
         </div>
         <div class="stat__divider"></div>
         <div class="stat">
-          <span class="stat__num">0</span>
+          <span class="stat__num" data-count="0">0</span>
           <span class="stat__label">Magic values</span>
         </div>
       </div>
@@ -90,55 +133,62 @@
   <!-- ── FEATURES ─────────────────────────────────────────────────── -->
   <section class="section" id="features">
     <div class="container">
-      <div class="section__header">
+      <div class="section__header reveal reveal--up">
+        <div class="section__eyebrow">Why ratelimit-engine</div>
         <h2 class="section__title">Built for production</h2>
         <p class="section__sub">Everything you need. Nothing you don't.</p>
       </div>
       <div class="features-grid">
 
-        <div class="feature-card">
+        <div class="feature-card reveal reveal--up" style="--delay: 0ms">
           <div class="feature-card__icon">🔌</div>
           <h3>Pluggable Algorithm</h3>
           <p>The algorithm is a first-class plugin. Extend <code>BaseAlgorithm</code> and drop in your own logic — zero changes to the engine.</p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal reveal--up" style="--delay: 60ms">
           <div class="feature-card__icon">🧩</div>
           <h3>Composite Policies</h3>
           <p>Combine algorithms with <code>ALL</code> or <code>ANY</code> mode. Enforce burst caps AND daily hard limits simultaneously.</p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal reveal--up" style="--delay: 120ms">
           <div class="feature-card__icon">🗄️</div>
           <h3>Pluggable Store</h3>
           <p>In-memory for dev, Redis with atomic Lua scripts for distributed production. Implement <code>BaseStore</code> for any backend.</p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal reveal--up" style="--delay: 180ms">
+          <div class="feature-card__icon">⚡</div>
+          <h3>Setup Wizard CLI</h3>
+          <p>Run <code>npx ratelimit-engine</code> — a 5-step wizard generates a ready-to-use <code>ratelimit.config.js</code> for your project.</p>
+        </div>
+
+        <div class="feature-card reveal reveal--up" style="--delay: 240ms">
+          <div class="feature-card__icon">📊</div>
+          <h3>Live Dashboard</h3>
+          <p>Real-time terminal dashboard at 10ms resolution. Sparkline, top IPs, live feed — all in your terminal, zero browser needed.</p>
+        </div>
+
+        <div class="feature-card reveal reveal--up" style="--delay: 300ms">
           <div class="feature-card__icon">📋</div>
           <h3>Structured Logging</h3>
           <p>JSON logs with context on every operation. Plug in Winston or Pino via <code>wrapExternalLogger()</code>.</p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal reveal--up" style="--delay: 360ms">
           <div class="feature-card__icon">🛡️</div>
           <h3>Fail-Open / Fail-Closed</h3>
           <p>Configurable behavior when the store is unavailable. Never silently drop traffic in production.</p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal reveal--up" style="--delay: 420ms">
           <div class="feature-card__icon">🔑</div>
           <h3>Flexible Key Resolution</h3>
           <p>Limit by IP, user ID, API key, route, or compose multiple resolvers into a single scoped key.</p>
         </div>
 
-        <div class="feature-card">
-          <div class="feature-card__icon">📡</div>
-          <h3>Standard Headers</h3>
-          <p>Automatically sets <code>X-RateLimit-*</code> and <code>Retry-After</code> headers on every response.</p>
-        </div>
-
-        <div class="feature-card">
+        <div class="feature-card reveal reveal--up" style="--delay: 480ms">
           <div class="feature-card__icon">⚙️</div>
           <h3>SOLID Architecture</h3>
           <p>Every layer is an interface. No magic values. No scattered error strings. Constants and types in dedicated files.</p>
@@ -151,11 +201,12 @@
   <!-- ── ALGORITHMS ────────────────────────────────────────────────── -->
   <section class="section section--dark" id="algorithms">
     <div class="container">
-      <div class="section__header">
-        <h2 class="section__title">5 algorithms. Pick one. Compose them. Write your own.</h2>
+      <div class="section__header reveal reveal--up">
+        <div class="section__eyebrow">Algorithm Library</div>
+        <h2 class="section__title">5 algorithms. Pick one.<br>Compose them. Write your own.</h2>
       </div>
 
-      <div class="algo-tabs">
+      <div class="algo-tabs reveal reveal--up" style="--delay: 100ms">
         <div class="algo-tabs__nav">
           <button class="algo-tab active" data-algo="fixed">Fixed Window</button>
           <button class="algo-tab" data-algo="sliding">Sliding Window</button>
@@ -171,13 +222,14 @@
               <h3>Fixed Window</h3>
               <p>Counts requests in a fixed time slot that resets at a hard boundary. Simple and cheap — best when exact boundary behaviour doesn't matter.</p>
               <ul>
-                <li>✅ Lowest memory footprint</li>
-                <li>✅ Simplest to reason about</li>
-                <li>⚠️ Boundary bursts possible</li>
+                <li><span class="algo-check algo-check--yes">✓</span> Lowest memory footprint</li>
+                <li><span class="algo-check algo-check--yes">✓</span> Simplest to reason about</li>
+                <li><span class="algo-check algo-check--warn">⚠</span> Boundary bursts possible</li>
               </ul>
               <div class="algo-panel__use">Best for: internal APIs, rough caps, dev environments</div>
             </div>
             <div class="algo-panel__code">
+              <div class="code-header"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-filename">express.js</span></div>
               <pre><code>import { createLimiter, FixedWindow,
          MemoryStore, byIP } from 'ratelimit-engine'
 
@@ -199,13 +251,14 @@ app.use(limiter.express())</code></pre>
               <h3>Sliding Window</h3>
               <p>Weighted approximation of a true rolling window. Eliminates the boundary spike problem of Fixed Window by weighting the previous slot.</p>
               <ul>
-                <li>✅ No boundary spikes</li>
-                <li>✅ Smooth, consistent limiting</li>
-                <li>⚠️ Slightly higher store usage</li>
+                <li><span class="algo-check algo-check--yes">✓</span> No boundary spikes</li>
+                <li><span class="algo-check algo-check--yes">✓</span> Smooth, consistent limiting</li>
+                <li><span class="algo-check algo-check--warn">⚠</span> Slightly higher store usage</li>
               </ul>
               <div class="algo-panel__use">Best for: public APIs, user-facing endpoints</div>
             </div>
             <div class="algo-panel__code">
+              <div class="code-header"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-filename">express.js</span></div>
               <pre><code>import { createLimiter, SlidingWindow,
          RedisStore, byUser } from 'ratelimit-engine'
 
@@ -225,13 +278,14 @@ const limiter = createLimiter({
               <h3>Token Bucket</h3>
               <p>Tokens refill at a fixed rate up to a maximum capacity. Allows short bursts while enforcing a long-term average rate.</p>
               <ul>
-                <li>✅ Burst-friendly</li>
-                <li>✅ Natural feel for users</li>
-                <li>✅ Ideal for API gateways</li>
+                <li><span class="algo-check algo-check--yes">✓</span> Burst-friendly</li>
+                <li><span class="algo-check algo-check--yes">✓</span> Natural feel for users</li>
+                <li><span class="algo-check algo-check--yes">✓</span> Ideal for API gateways</li>
               </ul>
               <div class="algo-panel__use">Best for: API gateways, developer APIs, SDKs</div>
             </div>
             <div class="algo-panel__code">
+              <div class="code-header"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-filename">express.js</span></div>
               <pre><code>import { createLimiter, TokenBucket,
          RedisStore, byAPIKey } from 'ratelimit-engine'
 
@@ -251,13 +305,14 @@ const limiter = createLimiter({
               <h3>Leaky Bucket</h3>
               <p>Requests queue up and drain at a fixed rate regardless of burst. Excess beyond capacity is dropped immediately.</p>
               <ul>
-                <li>✅ Strict output rate</li>
-                <li>✅ Smooths traffic spikes</li>
-                <li>⚠️ No burst allowance</li>
+                <li><span class="algo-check algo-check--yes">✓</span> Strict output rate</li>
+                <li><span class="algo-check algo-check--yes">✓</span> Smooths traffic spikes</li>
+                <li><span class="algo-check algo-check--warn">⚠</span> No burst allowance</li>
               </ul>
               <div class="algo-panel__use">Best for: payment APIs, webhook delivery, downstream protection</div>
             </div>
             <div class="algo-panel__code">
+              <div class="code-header"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-filename">express.js</span></div>
               <pre><code>import { createLimiter, LeakyBucket,
          RedisStore, byIP } from 'ratelimit-engine'
 
@@ -277,13 +332,14 @@ const limiter = createLimiter({
               <h3>Composite</h3>
               <p>Combine multiple algorithms with <code>ALL</code> (every must pass) or <code>ANY</code> (one must pass). Enforce burst caps AND hard daily limits simultaneously.</p>
               <ul>
-                <li>✅ Multi-policy enforcement</li>
-                <li>✅ ALL and ANY modes</li>
-                <li>✅ Strictest retryAfter returned</li>
+                <li><span class="algo-check algo-check--yes">✓</span> Multi-policy enforcement</li>
+                <li><span class="algo-check algo-check--yes">✓</span> ALL and ANY modes</li>
+                <li><span class="algo-check algo-check--yes">✓</span> Strictest retryAfter returned</li>
               </ul>
               <div class="algo-panel__use">Best for: tiered plans, enterprise SLAs, complex policies</div>
             </div>
             <div class="algo-panel__code">
+              <div class="code-header"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-filename">express.js</span></div>
               <pre><code>import { createLimiter, Composite,
   TokenBucket, SlidingWindow,
   RedisStore, byUser,
@@ -295,7 +351,7 @@ const limiter = createLimiter({
       new TokenBucket({ capacity: 50, refillRate: 10 }),
       new SlidingWindow({ limit: 500, windowMs: 86_400_000 }),
     ],
-    mode: COMPOSITE_MODES.ALL, // both must pass
+    mode: COMPOSITE_MODES.ALL,
   }),
   store: new RedisStore({ client: redis }),
   keyBy: byUser,
@@ -311,26 +367,31 @@ const limiter = createLimiter({
   <!-- ── USAGE ─────────────────────────────────────────────────────── -->
   <section class="section" id="usage">
     <div class="container">
-      <div class="section__header">
+      <div class="section__header reveal reveal--up">
+        <div class="section__eyebrow">Quick Start</div>
         <h2 class="section__title">Up and running in minutes</h2>
+        <p class="section__sub">Three steps. No boilerplate. No configuration files unless you want them.</p>
       </div>
 
       <div class="usage-steps">
 
-        <div class="usage-step">
+        <div class="usage-step reveal reveal--up" style="--delay: 0ms">
           <div class="usage-step__num">1</div>
           <div class="usage-step__content">
             <h3>Install</h3>
             <pre><code>npm install ratelimit-engine
-# For Redis support (optional)
+# For Redis support (optional peer dep)
 npm install ioredis</code></pre>
           </div>
         </div>
 
-        <div class="usage-step">
+        <div class="usage-step reveal reveal--up" style="--delay: 80ms">
           <div class="usage-step__num">2</div>
           <div class="usage-step__content">
-            <h3>Configure</h3>
+            <h3>Generate your config with the wizard</h3>
+            <pre><code>npx ratelimit-engine
+# Answers 5 questions → writes ratelimit.config.js</code></pre>
+            <p class="usage-step__note">Or configure manually:</p>
             <pre><code>import { createLimiter, TokenBucket,
          MemoryStore, byIP } from 'ratelimit-engine'
 
@@ -346,7 +407,7 @@ const limiter = createLimiter({
           </div>
         </div>
 
-        <div class="usage-step">
+        <div class="usage-step reveal reveal--up" style="--delay: 160ms">
           <div class="usage-step__num">3</div>
           <div class="usage-step__content">
             <h3>Apply to your framework</h3>
@@ -366,30 +427,112 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
     </div>
   </section>
 
-  <!-- ── ARCHITECTURE ──────────────────────────────────────────────── -->
-  <section class="section section--dark" id="architecture">
+  <!-- ── CLI ───────────────────────────────────────────────────────── -->
+  <section class="section section--dark" id="cli">
     <div class="container">
-      <div class="section__header">
+      <div class="section__header reveal reveal--up">
+        <div class="section__eyebrow">CLI Tools</div>
+        <h2 class="section__title">Two powerful CLI commands</h2>
+      </div>
+
+      <div class="cli-grid">
+        <div class="cli-card reveal reveal--left">
+          <div class="cli-card__header">
+            <div class="cli-card__icon">🧙</div>
+            <div>
+              <h3>Setup Wizard</h3>
+              <code class="cli-card__cmd">npx ratelimit-engine</code>
+            </div>
+          </div>
+          <p>A guided 5-step wizard — choose algorithm, store, framework, key strategy, and custom options. Generates a production-ready <code>ratelimit.config.js</code> you import directly.</p>
+          <ul class="cli-card__list">
+            <li>5 algorithms to choose from</li>
+            <li>Memory or Redis store</li>
+            <li>Express, Fastify, or manual</li>
+            <li>Custom filename + failOpen + onBlocked message</li>
+          </ul>
+          <div class="cli-card__terminal">
+            <div class="terminal-bar"><span></span><span></span><span></span></div>
+            <pre><code>  Step 1 — Choose an algorithm:
+  1. Token Bucket    Burst-friendly
+  2. Fixed Window    Simple counter
+  3. Sliding Window  No boundary spikes
+  4. Leaky Bucket    Strict output rate
+  5. Composite       Combine two algorithms
+
+  Pick [1-5]: <span class="cursor-blink">_</span></code></pre>
+          </div>
+        </div>
+
+        <div class="cli-card reveal reveal--right">
+          <div class="cli-card__header">
+            <div class="cli-card__icon">📊</div>
+            <div>
+              <h3>Live Dashboard</h3>
+              <code class="cli-card__cmd">npx ratelimit-engine dashboard</code>
+            </div>
+          </div>
+          <p>A real-time terminal dashboard refreshing every 10ms. See traffic as it happens — sparkline chart, allowed vs blocked bars, top IPs, and a millisecond-precise live feed.</p>
+          <ul class="cli-card__list">
+            <li>10ms resolution sparkline</li>
+            <li>Top IPs with block rate</li>
+            <li>Live request feed with timestamps</li>
+            <li>Press q/p/r to quit, pause, reset</li>
+          </ul>
+          <div class="cli-card__terminal cli-card__terminal--dashboard">
+            <div class="terminal-bar"><span></span><span></span><span></span></div>
+            <pre><code>  Total   <span class="bar-green">████████████████████</span>  56 req
+  Allowed <span class="bar-green">███████░░░░░░░░░░░░░</span>  14 req
+  Blocked <span class="bar-red">████████████░░░░░░░░</span>  42 req
+
+  ▁▂▃▅▇█▇▅▃▁▂▄▆█▇▄▂▁▃▅▇█
+
+  ❌ 20:01:35.919  ::1  POST /api/login
+  ✅ 20:01:35.900  ::1  GET  /api/search</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ARCHITECTURE ──────────────────────────────────────────────── -->
+  <section class="section" id="architecture">
+    <div class="container">
+      <div class="section__header reveal reveal--up">
+        <div class="section__eyebrow">Design Principles</div>
         <h2 class="section__title">Architecture</h2>
         <p class="section__sub">Four clean layers. Each independently replaceable.</p>
       </div>
 
-      <div class="arch-diagram">
-        <div class="arch-layer arch-layer--top">
+      <div class="arch-diagram reveal reveal--up" style="--delay: 100ms">
+        <div class="arch-layer arch-layer--app">
           <div class="arch-layer__label">Your Application</div>
           <div class="arch-layer__desc">Express · Fastify · Any HTTP framework</div>
         </div>
-        <div class="arch-arrow">↓ req / ↑ res</div>
-        <div class="arch-layer">
+        <div class="arch-arrow">
+          <div class="arch-arrow__line"></div>
+          <span>req / res</span>
+          <div class="arch-arrow__line"></div>
+        </div>
+        <div class="arch-layer arch-layer--adapter">
           <div class="arch-layer__label">Framework Adapters</div>
           <div class="arch-layer__desc">Extracts RequestContext → calls engine → writes headers</div>
         </div>
-        <div class="arch-arrow">↓ RequestContext / ↑ RateLimitResult</div>
+        <div class="arch-arrow">
+          <div class="arch-arrow__line"></div>
+          <span>RequestContext / RateLimitResult</span>
+          <div class="arch-arrow__line"></div>
+        </div>
         <div class="arch-layer arch-layer--engine">
-          <div class="arch-layer__label">Engine Core</div>
+          <div class="arch-layer__badge">Core</div>
+          <div class="arch-layer__label">Engine</div>
           <div class="arch-layer__desc">KeyResolver · RateLimiter · HeaderWriter · Hooks · Logging</div>
         </div>
-        <div class="arch-arrow arch-arrow--split">↓ key + store</div>
+        <div class="arch-arrow">
+          <div class="arch-arrow__line"></div>
+          <span>key + store</span>
+          <div class="arch-arrow__line"></div>
+        </div>
         <div class="arch-bottom">
           <div class="arch-layer arch-layer--algo">
             <div class="arch-layer__label">Algorithm Layer</div>
@@ -401,41 +544,55 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
           </div>
         </div>
       </div>
-
     </div>
   </section>
 
   <!-- ── BLOG TEASER ───────────────────────────────────────────────── -->
-  <section class="section" id="blog">
+  <section class="section section--dark" id="blog">
     <div class="container">
-      <div class="section__header">
+      <div class="section__header reveal reveal--up">
+        <div class="section__eyebrow">Engineering Blog</div>
         <h2 class="section__title">From the Blog</h2>
-        <p class="section__sub">Deep dives on rate limiting, algorithms, and enterprise patterns.</p>
+        <p class="section__sub">Rate limiting explained simply — algorithms, patterns, and real-world guides.</p>
       </div>
 
       <div class="blog-grid">
-        <a href="blog.html" class="blog-card blog-card--coming">
-          <div class="blog-card__tag">Coming soon</div>
+        <a href="blog.html" class="blog-card reveal reveal--up" style="--delay: 0ms">
+          <div class="blog-card__tag">Deep Dive</div>
           <h3>Token Bucket vs Sliding Window — when to use which</h3>
-          <p>A practical guide to choosing the right algorithm for your API, with real-world benchmarks.</p>
-          <span class="blog-card__read">Read →</span>
+          <p>A practical guide to choosing the right algorithm for your API, with analogies any developer can understand.</p>
+          <span class="blog-card__read">Read on blog →</span>
         </a>
-        <a href="blog.html" class="blog-card blog-card--coming">
-          <div class="blog-card__tag">Coming soon</div>
-          <h3>Writing your own rate limit algorithm in 20 lines</h3>
-          <p>How the plugin interface works, and how to ship your own algorithm as a separate npm package.</p>
-          <span class="blog-card__read">Read →</span>
+        <a href="blog.html" class="blog-card reveal reveal--up" style="--delay: 80ms">
+          <div class="blog-card__tag">Quick Start</div>
+          <h3>Add rate limiting to your Express app in 5 minutes</h3>
+          <p>No experience needed. Install, run the wizard, wire it up — step by step with real commands and code.</p>
+          <span class="blog-card__read">Read on blog →</span>
         </a>
-        <a href="blog.html" class="blog-card blog-card--coming">
-          <div class="blog-card__tag">Coming soon</div>
-          <h3>Rate limiting in Kubernetes — why MemoryStore is not enough</h3>
+        <a href="blog.html" class="blog-card reveal reveal--up" style="--delay: 160ms">
+          <div class="blog-card__tag">Architecture</div>
+          <h3>Why MemoryStore isn't enough when you scale to multiple servers</h3>
           <p>Why distributed rate limiting with Redis and atomic Lua scripts is non-negotiable in multi-pod deployments.</p>
-          <span class="blog-card__read">Read →</span>
+          <span class="blog-card__read">Read on blog →</span>
         </a>
       </div>
 
-      <div class="blog-cta">
+      <div class="blog-cta reveal reveal--up" style="--delay: 200ms">
         <a href="blog.html" class="btn btn--primary">Visit the Blog</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA BAND ──────────────────────────────────────────────────── -->
+  <section class="cta-band">
+    <div class="cta-band__blob cta-band__blob--1" aria-hidden="true"></div>
+    <div class="cta-band__blob cta-band__blob--2" aria-hidden="true"></div>
+    <div class="cta-band__inner reveal reveal--up">
+      <h2 class="cta-band__title">Ready to protect your API?</h2>
+      <p class="cta-band__sub">Open source. MIT licensed. Zero production dependencies.</p>
+      <div class="cta-band__actions">
+        <a href="#usage" class="btn btn--primary btn--lg">Get Started Free</a>
+        <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank" class="btn btn--ghost btn--lg">Star on GitHub ★</a>
       </div>
     </div>
   </section>
@@ -458,6 +615,11 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
       </div>
     </div>
   </footer>
+
+  <!-- ── SCROLL TO TOP ─────────────────────────────────────────────── -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
 
   <script src="main.js"></script>
 </body>
