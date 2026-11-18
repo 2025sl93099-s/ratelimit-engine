@@ -309,7 +309,7 @@ function initHIW() {
     }
   }, { threshold: 0.05 })
 
-  const section = document.getElementById('architecture')
+  const section = document.getElementById('architecture') || document.getElementById('hiw')
   if (section) sectionObserver.observe(section)
 
   window.addEventListener('scroll', onScroll, { passive: true })
