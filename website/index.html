@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 </head>
 <body class="motion-ready">
 
@@ -21,20 +21,19 @@
       </a>
 
       <ul class="nav__links" id="navLinks">
-        <li><a href="#features" class="nav__item">Features</a></li>
-        <li><a href="#algorithms" class="nav__item">Algorithms</a></li>
-        <li><a href="#usage" class="nav__item">Usage</a></li>
+        <li><a href="#features"     class="nav__item">Features</a></li>
+        <li><a href="#algorithms"   class="nav__item">Algorithms</a></li>
+        <li><a href="#usage"        class="nav__item">Usage</a></li>
         <li><a href="#architecture" class="nav__item">Architecture</a></li>
-        <li><a href="blog.html" class="nav__item nav__item--blog">Blog</a></li>
+        <li><a href="blog.html"     class="nav__item nav__item--blog">Blog</a></li>
         <li>
           <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank" class="nav__item nav__item--github">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
             GitHub
           </a>
         </li>
       </ul>
 
-      <!-- Mobile hamburger -->
       <button class="nav__burger" id="navBurger" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -43,10 +42,8 @@
 
   <!-- ── HERO ─────────────────────────────────────────────────────── -->
   <section class="hero" id="hero">
-    <!-- Animated background blobs -->
-    <div class="hero__blob hero__blob--1" aria-hidden="true"></div>
-    <div class="hero__blob hero__blob--2" aria-hidden="true"></div>
-    <div class="hero__blob hero__blob--3" aria-hidden="true"></div>
+    <div class="hero__grid"  aria-hidden="true"></div>
+    <div class="hero__glow"  aria-hidden="true"></div>
 
     <div class="hero__inner">
       <div class="hero__eyebrow reveal reveal--fade">Open Source · MIT License · Node.js ≥ 18</div>
@@ -65,8 +62,8 @@
         <div class="install-box">
           <span class="install-box__prefix">$</span>
           <code id="installCmd">npm install ratelimit-engine</code>
-          <button class="install-box__copy" onclick="copyInstall()" title="Copy to clipboard">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <button class="install-box__copy" onclick="copyInstall()" title="Copy to clipboard" aria-label="Copy install command">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           </button>
         </div>
       </div>
@@ -74,39 +71,33 @@
       <div class="hero__ctas reveal reveal--up" style="--delay: 320ms">
         <a href="#usage" class="btn btn--primary">
           Get Started
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
         <a href="https://github.com/Abhinav710/ratelimit-engine" target="_blank" class="btn btn--ghost">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
           View on GitHub
         </a>
       </div>
 
-      <!-- Floating pills -->
-      <div class="hero__pills reveal reveal--fade" style="--delay: 500ms" aria-hidden="true">
+      <div class="hero__pills reveal reveal--fade" style="--delay: 420ms" aria-hidden="true">
         <div class="hero__pill hero__pill--1">
-          <span class="hero__pill-dot hero__pill-dot--green"></span>
-          Token Bucket
+          <span class="hero__pill-dot hero__pill-dot--green"></span>Token Bucket
         </div>
         <div class="hero__pill hero__pill--2">
-          <span class="hero__pill-dot hero__pill-dot--blue"></span>
-          Redis Atomic
+          <span class="hero__pill-dot hero__pill-dot--blue"></span>Redis Atomic
         </div>
         <div class="hero__pill hero__pill--3">
-          <span class="hero__pill-dot hero__pill-dot--amber"></span>
-          Composite
+          <span class="hero__pill-dot hero__pill-dot--amber"></span>Composite
         </div>
         <div class="hero__pill hero__pill--4">
-          <span class="hero__pill-dot hero__pill-dot--pink"></span>
-          Live Dashboard
+          <span class="hero__pill-dot hero__pill-dot--pink"></span>Live Dashboard
         </div>
         <div class="hero__pill hero__pill--5">
-          <span class="hero__pill-dot hero__pill-dot--purple"></span>
-          Setup Wizard
+          <span class="hero__pill-dot hero__pill-dot--purple"></span>Setup Wizard
         </div>
       </div>
 
-      <div class="hero__stats reveal reveal--up" style="--delay: 420ms">
+      <div class="hero__stats reveal reveal--up" style="--delay: 500ms">
         <div class="stat">
           <span class="stat__num" data-count="5">0</span>
           <span class="stat__label">Algorithms</span>
@@ -133,68 +124,87 @@
   <!-- ── FEATURES ─────────────────────────────────────────────────── -->
   <section class="section" id="features">
     <div class="container">
-      <div class="section__header reveal reveal--up">
+      <div class="section__header section__header--left reveal reveal--up">
         <div class="section__eyebrow">Why ratelimit-engine</div>
         <h2 class="section__title">Built for production</h2>
         <p class="section__sub">Everything you need. Nothing you don't.</p>
       </div>
-      <div class="features-grid">
 
-        <div class="feature-card reveal reveal--up" style="--delay: 0ms">
-          <div class="feature-card__icon">🔌</div>
-          <h3>Pluggable Algorithm</h3>
-          <p>The algorithm is a first-class plugin. Extend <code>BaseAlgorithm</code> and drop in your own logic — zero changes to the engine.</p>
+      <!-- Group 1: Algorithm Design -->
+      <div class="feature-group reveal reveal--up">
+        <div class="feature-group__label">
+          <span class="feature-group__label-text">Algorithm design</span>
+          <div class="feature-group__label-line"></div>
         </div>
-
-        <div class="feature-card reveal reveal--up" style="--delay: 60ms">
-          <div class="feature-card__icon">🧩</div>
-          <h3>Composite Policies</h3>
-          <p>Combine algorithms with <code>ALL</code> or <code>ANY</code> mode. Enforce burst caps AND daily hard limits simultaneously.</p>
+        <div class="features-grid">
+          <div class="feature-card feature-card--algo">
+            <div class="feature-card__icon">🔌</div>
+            <h3>Pluggable Algorithm</h3>
+            <p>The algorithm is a first-class plugin. Extend <code>BaseAlgorithm</code> and drop in your own logic — zero changes to the engine.</p>
+          </div>
+          <div class="feature-card feature-card--algo">
+            <div class="feature-card__icon">🧩</div>
+            <h3>Composite Policies</h3>
+            <p>Combine algorithms with <code>ALL</code> or <code>ANY</code> mode. Enforce burst caps AND daily hard limits simultaneously.</p>
+          </div>
+          <div class="feature-card feature-card--algo">
+            <div class="feature-card__icon">🔑</div>
+            <h3>Flexible Key Resolution</h3>
+            <p>Limit by IP, user ID, API key, route, or compose multiple resolvers into a single scoped key.</p>
+          </div>
         </div>
-
-        <div class="feature-card reveal reveal--up" style="--delay: 120ms">
-          <div class="feature-card__icon">🗄️</div>
-          <h3>Pluggable Store</h3>
-          <p>In-memory for dev, Redis with atomic Lua scripts for distributed production. Implement <code>BaseStore</code> for any backend.</p>
-        </div>
-
-        <div class="feature-card reveal reveal--up" style="--delay: 180ms">
-          <div class="feature-card__icon">⚡</div>
-          <h3>Setup Wizard CLI</h3>
-          <p>Run <code>npx ratelimit-engine</code> — a 5-step wizard generates a ready-to-use <code>ratelimit.config.js</code> for your project.</p>
-        </div>
-
-        <div class="feature-card reveal reveal--up" style="--delay: 240ms">
-          <div class="feature-card__icon">📊</div>
-          <h3>Live Dashboard</h3>
-          <p>Real-time terminal dashboard at 10ms resolution. Sparkline, top IPs, live feed — all in your terminal, zero browser needed.</p>
-        </div>
-
-        <div class="feature-card reveal reveal--up" style="--delay: 300ms">
-          <div class="feature-card__icon">📋</div>
-          <h3>Structured Logging</h3>
-          <p>JSON logs with context on every operation. Plug in Winston or Pino via <code>wrapExternalLogger()</code>.</p>
-        </div>
-
-        <div class="feature-card reveal reveal--up" style="--delay: 360ms">
-          <div class="feature-card__icon">🛡️</div>
-          <h3>Fail-Open / Fail-Closed</h3>
-          <p>Configurable behavior when the store is unavailable. Never silently drop traffic in production.</p>
-        </div>
-
-        <div class="feature-card reveal reveal--up" style="--delay: 420ms">
-          <div class="feature-card__icon">🔑</div>
-          <h3>Flexible Key Resolution</h3>
-          <p>Limit by IP, user ID, API key, route, or compose multiple resolvers into a single scoped key.</p>
-        </div>
-
-        <div class="feature-card reveal reveal--up" style="--delay: 480ms">
-          <div class="feature-card__icon">⚙️</div>
-          <h3>SOLID Architecture</h3>
-          <p>Every layer is an interface. No magic values. No scattered error strings. Constants and types in dedicated files.</p>
-        </div>
-
       </div>
+
+      <!-- Group 2: Store & Infrastructure -->
+      <div class="feature-group reveal reveal--up" style="--delay: 60ms">
+        <div class="feature-group__label">
+          <span class="feature-group__label-text">Store &amp; infrastructure</span>
+          <div class="feature-group__label-line"></div>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card feature-card--infra">
+            <div class="feature-card__icon">🗄️</div>
+            <h3>Pluggable Store</h3>
+            <p>In-memory for dev, Redis with atomic Lua scripts for distributed production. Implement <code>BaseStore</code> for any backend.</p>
+          </div>
+          <div class="feature-card feature-card--infra">
+            <div class="feature-card__icon">🛡️</div>
+            <h3>Fail-Open / Fail-Closed</h3>
+            <p>Configurable behavior when the store is unavailable. Never silently drop traffic in production.</p>
+          </div>
+          <div class="feature-card feature-card--infra">
+            <div class="feature-card__icon">⚙️</div>
+            <h3>SOLID Architecture</h3>
+            <p>Every layer is an interface. No magic values. No scattered error strings. Constants and types in dedicated files.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group 3: Developer Experience -->
+      <div class="feature-group reveal reveal--up" style="--delay: 120ms">
+        <div class="feature-group__label">
+          <span class="feature-group__label-text">Developer experience</span>
+          <div class="feature-group__label-line"></div>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card feature-card--dx">
+            <div class="feature-card__icon">⚡</div>
+            <h3>Setup Wizard CLI</h3>
+            <p>Run <code>npx ratelimit-engine</code> — a 5-step wizard generates a ready-to-use <code>ratelimit.config.js</code> for your project.</p>
+          </div>
+          <div class="feature-card feature-card--dx">
+            <div class="feature-card__icon">📊</div>
+            <h3>Live Dashboard</h3>
+            <p>Real-time terminal dashboard at 10ms resolution. Sparkline, top IPs, live feed — all in your terminal, zero browser needed.</p>
+          </div>
+          <div class="feature-card feature-card--dx">
+            <div class="feature-card__icon">📋</div>
+            <h3>Structured Logging</h3>
+            <p>JSON logs with context on every operation. Plug in Winston or Pino via <code>wrapExternalLogger()</code>.</p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -370,7 +380,7 @@ const limiter = createLimiter({
       <div class="section__header reveal reveal--up">
         <div class="section__eyebrow">Quick Start</div>
         <h2 class="section__title">Up and running in minutes</h2>
-        <p class="section__sub">Three steps. No boilerplate. No configuration files unless you want them.</p>
+        <p class="section__sub">Three steps. No boilerplate.</p>
       </div>
 
       <div class="usage-steps">
@@ -430,7 +440,7 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
   <!-- ── CLI ───────────────────────────────────────────────────────── -->
   <section class="section section--dark" id="cli">
     <div class="container">
-      <div class="section__header reveal reveal--up">
+      <div class="section__header section__header--left reveal reveal--up">
         <div class="section__eyebrow">CLI Tools</div>
         <h2 class="section__title">Two powerful CLI commands</h2>
       </div>
@@ -506,7 +516,6 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
 
       <div class="hiw-layout" id="hiwLayout">
 
-        <!-- LEFT: step list with vertical rail -->
         <div class="hiw-steps" id="hiwSteps">
           <div class="hiw-rail">
             <div class="hiw-rail__track"></div>
@@ -550,17 +559,11 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
           </div>
         </div>
 
-        <!-- RIGHT: sticky animated diagram -->
         <div class="hiw-diagram-wrap" id="hiwDiagramWrap">
           <div class="hiw-diagram" id="hiwDiagram">
-
-            <!-- Background dot grid -->
             <div class="hiw-grid" aria-hidden="true"></div>
-
-            <!-- SVG wires between nodes -->
             <svg class="hiw-svg" id="hiwSvg" aria-hidden="true" overflow="visible"></svg>
 
-            <!-- Nodes -->
             <div class="hiw-node hiw-node--app"     data-node="0" id="hnApp">
               <div class="hiw-node__icon">🌐</div>
               <div class="hiw-node__label">Your App</div>
@@ -593,7 +596,7 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
               <div class="hiw-node__sub">Redis / Memory</div>
             </div>
 
-            <!-- Orbit rings around engine -->
+            <!-- Single orbit ring -->
             <div class="hiw-orbit hiw-orbit--a" aria-hidden="true">
               <div class="hiw-orbit__dot"></div>
             </div>
@@ -611,10 +614,12 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
   <!-- ── BLOG TEASER ───────────────────────────────────────────────── -->
   <section class="section section--dark" id="blog">
     <div class="container">
-      <div class="section__header reveal reveal--up">
-        <div class="section__eyebrow">Engineering Blog</div>
-        <h2 class="section__title">From the Blog</h2>
-        <p class="section__sub">Rate limiting explained simply — algorithms, patterns, and real-world guides.</p>
+      <div class="section__header section__header--split reveal reveal--up">
+        <div class="section__left">
+          <div class="section__eyebrow">Engineering Blog</div>
+          <h2 class="section__title">From the Blog</h2>
+        </div>
+        <a href="blog.html" class="btn btn--ghost">View all articles</a>
       </div>
 
       <div class="blog-grid">
@@ -622,32 +627,26 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
           <div class="blog-card__tag">Deep Dive</div>
           <h3>Token Bucket vs Sliding Window — when to use which</h3>
           <p>A practical guide to choosing the right algorithm for your API, with analogies any developer can understand.</p>
-          <span class="blog-card__read">Read on blog →</span>
+          <span class="blog-card__read">Read →</span>
         </a>
         <a href="blog.html" class="blog-card reveal reveal--up" style="--delay: 80ms">
           <div class="blog-card__tag">Quick Start</div>
           <h3>Add rate limiting to your Express app in 5 minutes</h3>
           <p>No experience needed. Install, run the wizard, wire it up — step by step with real commands and code.</p>
-          <span class="blog-card__read">Read on blog →</span>
+          <span class="blog-card__read">Read →</span>
         </a>
         <a href="blog.html" class="blog-card reveal reveal--up" style="--delay: 160ms">
           <div class="blog-card__tag">Architecture</div>
           <h3>Why MemoryStore isn't enough when you scale to multiple servers</h3>
           <p>Why distributed rate limiting with Redis and atomic Lua scripts is non-negotiable in multi-pod deployments.</p>
-          <span class="blog-card__read">Read on blog →</span>
+          <span class="blog-card__read">Read →</span>
         </a>
-      </div>
-
-      <div class="blog-cta reveal reveal--up" style="--delay: 200ms">
-        <a href="blog.html" class="btn btn--primary">Visit the Blog</a>
       </div>
     </div>
   </section>
 
   <!-- ── CTA BAND ──────────────────────────────────────────────────── -->
   <section class="cta-band">
-    <div class="cta-band__blob cta-band__blob--1" aria-hidden="true"></div>
-    <div class="cta-band__blob cta-band__blob--2" aria-hidden="true"></div>
     <div class="cta-band__inner reveal reveal--up">
       <h2 class="cta-band__title">Ready to protect your API?</h2>
       <p class="cta-band__sub">Open source. MIT licensed. Zero production dependencies.</p>
@@ -677,9 +676,8 @@ if (!result.allowed) { /* handle 429 */ }</code></pre>
     </div>
   </footer>
 
-  <!-- ── SCROLL TO TOP ─────────────────────────────────────────────── -->
   <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
   </button>
 
   <script src="main.js"></script>
