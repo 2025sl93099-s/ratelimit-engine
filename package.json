@@ -41,7 +41,7 @@
   "author": "Abhinav710 <kumarabhinav5693@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.12.0"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^5.1.0",
